@@ -16,11 +16,8 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    Or(a=reset, b=load, out=ext-sel);
-    Inc16(in=circle, out=inc-in);
-    
-    Mux16(a=circle, b=inc-in, sel=inc, out=circle-in);
-    Mux16(a=in, b=false, sel=reset, out=ext-in);
-    Mux16(a=circle-in, b=ext-in, sel=ext-sel, out=reg-in);
-    DFF16(in=reg-in,out=out,out=circle);
+    Add16(a=circle, b[0]=inc,b[1..15]=false, out=increment-processed);
+    Mux16(a=increment-processed, b=in, sel=load, out=load-processed);
+    Mux16(a=load-processed, b=false, sel=reset, out=processed);
+    DFF16(in=processed,out=out,out=circle);
 }
