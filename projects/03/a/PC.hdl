@@ -22,6 +22,5 @@ CHIP PC {
     Mux16(a=circle, b=inc-in, sel=inc, out=circle-in);
     Mux16(a=in, b=false, sel=reset, out=ext-in);
     Mux16(a=circle-in, b=ext-in, sel=ext-sel, out=reg-in);
-
-    Register(in=reg-in, load=true, out=out,out=circle);
+    DFF16(in=reg-in,out=out,out=circle);
 }
