@@ -63,9 +63,9 @@ CHIP CPU {
     Or(a=aluOutNg, b=aluOutZr, out=aluOutNotGt0);
     Not(in=aluOutNotGt0, out=aluOutGt0);
 
-    Mux(a=false, b=aluOutNg, sel=instruction[2], out=ltSatisfied);
-    Mux(a=false, b=aluOutZr, sel=instruction[1], out=eqSatisfied);
-    Mux(a=false, b=aluOutGt0, sel=instruction[0],  out=gtSatisfied);
+    And( b=aluOutNg, a=instruction[2], out=ltSatisfied);
+    And( b=aluOutZr, a=instruction[1], out=eqSatisfied);
+    And( b=aluOutGt0,a=instruction[0],  out=gtSatisfied);
 
     Or(a=ltSatisfied, b=eqSatisfied, out=lteqSatisfied);
     Or(a=lteqSatisfied, b=gtSatisfied, out=jumpSatisfied);
