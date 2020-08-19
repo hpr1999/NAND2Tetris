@@ -39,5 +39,37 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
-}
+    And(a=instruction[4], b=instruction[15], out=loadD);
+    DRegister(in=aluOut, load=loadD, out=d);
+    
+    // based on instruction type, either load the value encoded in the instruction or the value from the alu
+    Mux16(a[0..14]=instruction[0..14],a[15]=false, b=aluOut, sel=instruction[15], out=aIn);
+    // load if we either have a @ Instruction or want to save the value of the alu output
+    Not(in=instruction[15],out=addressInstruction);
+    Or(a=addressInstruction, b=instruction[5], out=loadA);
+    ARegister(in=aIn, load=loadA, out=address, out[0..14]=addressM);
+
+    // Supply the Alu with a or m, as encoded in the instruction
+    Mux16(a=address, b=inM, sel=instruction[12], out=mOrA);
+    // fill the alu with d and one of the other values and the control bits from the instruction
+    ALU(x=d, y=mOrA, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outM,out=aluOut, zr=aluOutZr, ng=aluOutNg);   
+
+    And(a=instruction[15], b=instruction[3], out=writeM);
+
+    // instruction 13 = j1 less
+    // instruction 14 = j2 equal
+    // instruction 15 = j3 greater
+
+    Or(a=aluOutNg, b=aluOutZr, out=aluOutNotGt0);
+    Not(in=aluOutNotGt0, out=aluOutGt0);
+
+    Mux(a=false, b=aluOutNg, sel=instruction[2], out=ltSatisfied);
+    Mux(a=false, b=aluOutZr, sel=instruction[1], out=eqSatisfied);
+    Mux(a=false, b=aluOutGt0, sel=instruction[0],  out=gtSatisfied);
+
+    Or(a=ltSatisfied, b=eqSatisfied, out=lteqSatisfied);
+    Or(a=lteqSatisfied, b=gtSatisfied, out=jumpSatisfied);
+    And(a=instruction[15], b=jumpSatisfied, out=jump);
+
+    PC(in=address, load=jump, inc=true, reset=reset, out[0..14]=pc,out=pcout);
+    }
