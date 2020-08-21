@@ -7,11 +7,17 @@ import java.util.Map;
 
 public class SymbolTable {
 
-    private Map<String, Symbol> symbolTable = new HashMap<>();
+    private Map<Symbol, Integer> symbolTable = new HashMap<>();
 
-
-    public Symbol getSymbol(String symbolName) {
-        return symbolTable.get(symbolName);
+    public void addSymbol(Symbol symbol, int lineNumber) {
+        if (symbolTable.containsKey(symbol))
+            throw new IllegalStateException("An existing Symbol may not be overwritten.");
+        symbolTable.put(symbol, lineNumber);
     }
+
+    public int getLine(Symbol symbol) {
+        return symbolTable.get(symbol);
+    }
+
 
 }
