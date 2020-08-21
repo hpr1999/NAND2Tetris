@@ -19,7 +19,7 @@ public abstract class Instruction {
     protected Instruction(int integerRepresentation, String stringRepresentation) {
         this.integerRepresentation = integerRepresentation;
         this.stringRepresentation = stringRepresentation;
-        if (!isValid())
+        if (stringRepresentation.isEmpty() || !isValid())
             throw new IllegalArgumentException(integerRepresentation + " and "
                     + stringRepresentation + " do not form a valid Instruction.");
     }

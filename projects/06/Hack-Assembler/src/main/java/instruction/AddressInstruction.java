@@ -40,6 +40,10 @@ public class AddressInstruction extends Instruction {
 
     @Override
     public boolean isValidMnemonic() {
+        return isValidMnemonic(stringRepresentation);
+    }
+
+    public static boolean isValidMnemonic(String stringRepresentation) {
         int value = Integer.parseInt(stringRepresentation.substring(1));
         return stringRepresentation.charAt(0) == '@' &&
                 value <= 0b111111111111111 && value >= 0;
