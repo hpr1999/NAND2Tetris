@@ -1,7 +1,6 @@
 package instruction;
 
 import base.Instruction;
-import base.SymbolTable;
 
 public class LabelInstruction extends Instruction {
 

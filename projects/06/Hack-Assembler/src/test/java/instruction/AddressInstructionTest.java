@@ -41,16 +41,30 @@ class AddressInstructionTest {
     }
 
     @Test
-    void ctors() {
+    void stringCtor() {
         AddressInstruction string = new AddressInstruction("@32767");
         assertEquals(0b0111111111111111, string.machineCode());
+    }
+
+    @Test
+    void intCtor() {
         AddressInstruction integer = new AddressInstruction(0b0111111111111111);
         assertEquals("0111111111111111", integer.machineCodeString());
         assertEquals("@32767", integer.mnemonic());
     }
 
     @Test
-    void mnemonicValid() {
-        AddressInstruction ins = new AddressInstruction("@20");
+    void addressTooLarge() {
+        assertThrows(IllegalArgumentException.class, () -> new AddressInstruction("@32768"));
+    }
+
+    @Test
+    void addressTooSmall() {
+        assertThrows(IllegalArgumentException.class, () -> new AddressInstruction("@-1"));
+    }
+
+    @Test
+    void addressNoNumber() {
+        assertThrows(IllegalArgumentException.class, () -> new AddressInstruction("@asdsad"));
     }
 }

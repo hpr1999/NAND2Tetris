@@ -1,6 +1,7 @@
 package base;
 
 import instruction.Symbol;
+import util.BinaryUtil;
 
 public abstract class Instruction {
 
@@ -40,7 +41,7 @@ public abstract class Instruction {
 
     public boolean isValidMachineCode() {
         // Binary Integers between 0 and 16 1's
-        return integerRepresentation <= 0b1111111111111111 && integerRepresentation >= 0b0000000000000000;
+        return integerRepresentation <= BinaryUtil.LARGEST_VALUE && integerRepresentation >= BinaryUtil.SMALLEST_VALUE;
     }
 
     public abstract String mnemonic();

@@ -1,6 +1,7 @@
 package instruction;
 
 import base.Instruction;
+import util.BinaryUtil;
 
 public class AddressInstruction extends Instruction {
 
@@ -10,7 +11,7 @@ public class AddressInstruction extends Instruction {
     }
 
     public AddressInstruction(String stringRepresentation) {
-        this(Integer.valueOf(stringRepresentation.substring(1)),
+        this(Integer.parseInt(stringRepresentation.substring(1)),
                 stringRepresentation);
     }
 
@@ -46,13 +47,15 @@ public class AddressInstruction extends Instruction {
     public static boolean isValidMnemonic(String stringRepresentation) {
         int value = Integer.parseInt(stringRepresentation.substring(1));
         return stringRepresentation.charAt(0) == '@' &&
-                value <= 0b111111111111111 && value >= 0;
+                value <= (BinaryUtil.LARGEST_VALUE >> 1) &&
+                value >= BinaryUtil.SMALLEST_VALUE;
     }
 
     @Override
     public boolean isValidMachineCode() {
 //        First bit of 16 bit number is 0
-        return super.isValidMachineCode() && Integer.numberOfLeadingZeros(integerRepresentation) >= 17;
+        return super.isValidMachineCode() &&
+                Integer.numberOfLeadingZeros(integerRepresentation) > BinaryUtil.BINARY_WORD_LENGTH;
     }
 
     @Override
@@ -67,8 +70,7 @@ public class AddressInstruction extends Instruction {
 
     @Override
     public String machineCodeString() {
-
-        return Integer.toBinaryString(machineCode() | 0b10000000000000000).substring(1);
+        return BinaryUtil.fixedLengthBinaryString(machineCode(), BinaryUtil.BINARY_WORD_LENGTH);
     }
 
     @Override
