@@ -10,7 +10,6 @@ public abstract class Instruction {
 
     public Instruction(int integerRepresentation) {
         this(integerRepresentation, Integer.toBinaryString(integerRepresentation));
-
     }
 
     public Instruction(String stringRepresentation) {

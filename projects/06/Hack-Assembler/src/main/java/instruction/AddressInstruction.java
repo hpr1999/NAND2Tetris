@@ -5,9 +5,11 @@ import util.BinaryUtil;
 
 public class AddressInstruction extends Instruction {
 
+    public static final Character ADDRESS_IDENTIFIER = '@';
+
     public AddressInstruction(int integerRepresentation) {
         this(integerRepresentation,
-                "@" + integerRepresentation);
+                ADDRESS_IDENTIFIER.toString() + integerRepresentation);
     }
 
     public AddressInstruction(String stringRepresentation) {
@@ -46,7 +48,7 @@ public class AddressInstruction extends Instruction {
 
     public static boolean isValidMnemonic(String stringRepresentation) {
         int value = Integer.parseInt(stringRepresentation.substring(1));
-        return stringRepresentation.charAt(0) == '@' &&
+        return stringRepresentation.charAt(0) == ADDRESS_IDENTIFIER &&
                 value <= (BinaryUtil.LARGEST_VALUE >> 1) &&
                 value >= BinaryUtil.SMALLEST_VALUE;
     }
