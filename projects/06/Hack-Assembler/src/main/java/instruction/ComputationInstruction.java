@@ -10,9 +10,9 @@ public class ComputationInstruction extends Instruction {
     private static final BiMap<String, Integer> computations = HashBiMap.create();
     private static final BiMap<String, Integer> destinations = HashBiMap.create();
     private static final BiMap<String, Integer> jumps = HashBiMap.create();
-    public static final int DESTINATION_BINARY_OFFSET = 2;
-    public static final int COMPUTATION_BINARY_OFFSET = 5;
-    public static final int MARKER_BINARY_OFFSET = 12;
+    public static final int DESTINATION_BINARY_OFFSET = 3;
+    public static final int COMPUTATION_BINARY_OFFSET = 6;
+    public static final int MARKER_BINARY_OFFSET = 13;
 
     static {
         jumps.put(null, 0b000);
@@ -90,7 +90,7 @@ public class ComputationInstruction extends Instruction {
         int[] result = new int[3];
         result[0] = BinaryUtil.extractBinaryDigits(machineCode, DESTINATION_BINARY_OFFSET, COMPUTATION_BINARY_OFFSET - DESTINATION_BINARY_OFFSET);
         result[1] = BinaryUtil.extractBinaryDigits(machineCode, COMPUTATION_BINARY_OFFSET, MARKER_BINARY_OFFSET - COMPUTATION_BINARY_OFFSET);
-        result[2] = BinaryUtil.extractBinaryDigits(machineCode,0,DESTINATION_BINARY_OFFSET+1);
+        result[2] = BinaryUtil.extractBinaryDigits(machineCode, 0, DESTINATION_BINARY_OFFSET);
         return result;
     }
 
@@ -124,7 +124,7 @@ public class ComputationInstruction extends Instruction {
     }
 
     private static int translate(String destMnemonic, String compMnemonic, String jmpMnemonic) {
-        return (111 << 12)
+        return (0b111 << MARKER_BINARY_OFFSET)
                 | (translatePart(destMnemonic, destinations) << DESTINATION_BINARY_OFFSET)
                 | (translatePart(compMnemonic, computations) << COMPUTATION_BINARY_OFFSET)
                 | translatePart(jmpMnemonic, jumps);
@@ -155,17 +155,39 @@ public class ComputationInstruction extends Instruction {
         return null;
     }
 
+
+    private static boolean isValidMachineCodePart(int machineCode, BiMap<String, Integer> partMap) {
+        return partMap.inverse().containsKey(machineCode);
+    }
+
+    public static boolean isValidMachineCode(int machineCode) {
+        int[] machineCodeParts = splitMachineCode(machineCode);
+        return Instruction.isValidMachineCode(machineCode) &&
+                isValidMachineCodePart(machineCodeParts[0], destinations) &&
+                isValidMachineCodePart(machineCodeParts[1], computations) &&
+                isValidMachineCodePart(machineCodeParts[2], jumps);
+    }
+
+    @Override
+    public boolean isValidMachineCode() {
+        return isValidMachineCode(integerRepresentation);
+    }
+
     private static boolean isValidMnemonicPart(String mnemonic, BiMap<String, Integer> partMap) {
         return partMap.containsKey(mnemonic);
     }
 
-    @Override
-    public boolean isValidMnemonic() {
-        String[] mnemonicParts = splitMnemonic(stringRepresentation);
+    public static boolean isValidMnemonic(String mnemonic) {
+        String[] mnemonicParts = splitMnemonic(mnemonic);
         return
                 (mnemonicParts[0] == null || isValidMnemonicPart(mnemonicParts[0], destinations)) &&
                         (isValidMnemonicPart(mnemonicParts[1], computations)) &&
                         (mnemonicParts[2] == null || isValidMnemonicPart(mnemonicParts[2], jumps));
+    }
+
+    @Override
+    public boolean isValidMnemonic() {
+        return isValidMnemonic(stringRepresentation);
     }
 
     @Override

@@ -66,7 +66,6 @@ class BinaryUtilTest {
     void extractLast() {
         assertEquals(0b0, BinaryUtil.extractBinaryDigits(0b001, 30, 1));
         assertEquals(0b1, BinaryUtil.extractBinaryDigits(0b01000000000000000000000000000000, 30, 1));
-
     }
 
     @Test

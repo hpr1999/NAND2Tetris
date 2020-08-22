@@ -38,9 +38,13 @@ public abstract class Instruction {
 
     public abstract boolean isValidMnemonic();
 
-    public boolean isValidMachineCode() {
+    public static boolean isValidMachineCode(int machineCode) {
         // Binary Integers between 0 and 16 1's
-        return integerRepresentation <= BinaryUtil.LARGEST_VALUE && integerRepresentation >= BinaryUtil.SMALLEST_VALUE;
+        return machineCode <= BinaryUtil.LARGEST_VALUE && machineCode >= BinaryUtil.SMALLEST_VALUE;
+    }
+
+    public boolean isValidMachineCode() {
+        return isValidMachineCode(integerRepresentation);
     }
 
     public abstract String mnemonic();
