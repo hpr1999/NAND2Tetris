@@ -6,48 +6,131 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ComputationInstructionTest {
 
+    private int machineCode;
+    private int expectedMachineCode;
+    private String mnemonic;
+    private String expectedMnemonic;
+
     @Test
     void validMachineCode() {
-        fail();
+        init(0b111_0_111111_001_110);
+        expect("M=1;JLE");
+        testMachineCode();
     }
 
     @Test
     void machineCodeInvalidLength() {
-        fail();
+        init(0b111__001101_110_101);
+        expectFail();
+        testMachineCode();
     }
 
     @Test
     void machineCodeInvalidWrongA() {
-        fail();
+        init(0b111_1_001101_110_101);
+        expectFail();
+        testMachineCode();
     }
 
     @Test
     void validMnemonics() {
-        fail();
+        init("AD=!D;JNE");
+        expect(0b111_0_001101_110_101);
+        testMnemonic();
     }
 
     @Test
     void validMnemonicsNoDest() {
-        fail();
+        init("D;JMP");
+        expect(0b111_0_001100_000_111);
+        testMnemonic();
     }
 
     @Test
     void validMnemonicsNoJump() {
-        fail();
+        init("AMD=D|M");
+        expect(0b111_1_010101_111_000);
+        testMnemonic();
     }
 
     @Test
     void validMnemonicsOnlyComp() {
-        fail();
+        init("D+A");
+        expect(0b111_0_000010_000_000);
+        testMnemonic();
     }
 
     @Test
-    void invalidMnemonics() {
-        fail();
+    void invalidJump() {
+        init("A=D;JAP");
+        expectFail();
+        testMnemonic();
+    }
+
+    @Test
+    void invalidDest() {
+        init("C=D;JMP");
+        expectFail();
+        testMnemonic();
+    }
+
+    @Test
+    void invalidComp() {
+        init("D=F;JMP");
+        expectFail();
+        testMnemonic();
     }
 
     @Test
     void invalidMnemonicsWhiteSpace() {
-        fail();
+        init("A =1; JMP");
+        expectFail();
+        testMnemonic();
     }
+
+
+    private void init(int machineCode) {
+        this.machineCode = machineCode;
+    }
+
+    private void init(String mnemonic) {
+        this.mnemonic = mnemonic;
+    }
+
+    private void expect(int expectedMachineCode) {
+        this.expectedMachineCode = expectedMachineCode;
+    }
+
+    private void expectFail() {
+        this.expectedMnemonic = null;
+        this.expectedMachineCode = -1;
+    }
+
+    private void expect(String expectedMnemonic) {
+        this.expectedMnemonic = expectedMnemonic;
+    }
+
+    private void testMnemonic() {
+        boolean valid = expectedMachineCode != -1;
+        assertEquals(valid, ComputationInstruction.isValidMnemonic(mnemonic));
+
+        if (valid) {
+            assertEquals(expectedMachineCode, ComputationInstruction.translate(mnemonic));
+        } else {
+            assertThrows(IllegalArgumentException.class, () -> ComputationInstruction.translate(mnemonic));
+        }
+    }
+
+    private void testMachineCode() {
+        boolean valid = expectedMnemonic != null;
+        assertEquals(valid, ComputationInstruction.isValidMachineCode(machineCode));
+
+        if (valid) {
+            assertEquals(expectedMnemonic, ComputationInstruction.translate(machineCode));
+        } else {
+            assertThrows(IllegalArgumentException.class, () -> ComputationInstruction.translate(machineCode));
+        }
+    }
+
+
 }

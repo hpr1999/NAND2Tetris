@@ -5,6 +5,8 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import util.BinaryUtil;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class ComputationInstruction extends Instruction {
 
     private static final BiMap<String, Integer> computations = HashBiMap.create();
@@ -76,9 +78,16 @@ public class ComputationInstruction extends Instruction {
     }
 
     public static String translate(int machineCode) {
+        checkArgument(Instruction.isValidMachineCode(machineCode),
+                "%s is not valid machineCode of any kind.",
+                Integer.toBinaryString(machineCode));
+        checkArgument(isValidMachineCode(machineCode), "%s is not a valid ComputationInstruction.",
+                Integer.toBinaryString(machineCode));
+
         int[] machineCodeParts = splitMachineCode(machineCode);
         String destination = translatePart(machineCodeParts[0], destinations);
         String computation = translatePart(machineCodeParts[1], computations);
+
         String jump = translatePart(machineCodeParts[2], jumps);
 
         return (destination != null ? destination + "=" : "") +
@@ -95,6 +104,9 @@ public class ComputationInstruction extends Instruction {
     }
 
     private static String translatePart(int machineCode, BiMap<String, Integer> partMap) {
+        checkArgument(partMap.inverse().containsKey(machineCode),
+                "%s is neither a valid computation, destination nor jump machineCode fragment.",
+                                    machineCode);
         return partMap.inverse().get(machineCode);
     }
 
@@ -131,6 +143,7 @@ public class ComputationInstruction extends Instruction {
     }
 
     private static int translatePart(String mnemonic, BiMap<String, Integer> partMap) {
+        checkArgument(partMap.containsKey(mnemonic), "The mnemonic %s is invalid.", mnemonic);
         return partMap.get(mnemonic);
     }
 

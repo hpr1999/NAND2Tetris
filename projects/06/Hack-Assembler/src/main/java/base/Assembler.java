@@ -8,6 +8,5 @@ public class Assembler {
         ArgumentProcessor processor = new ArgumentProcessor(args);
         processor.process();
         AssemblerFile assemblerFile = new AssemblerFile(processor.getAsmFilePath());
-
     }
 }
