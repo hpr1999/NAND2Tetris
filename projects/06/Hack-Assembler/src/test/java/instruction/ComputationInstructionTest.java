@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ComputationInstructionTest {
 
     private int machineCode;
-    private int expectedMachineCode;
+    private Integer expectedMachineCode;
     private String mnemonic;
     private String expectedMnemonic;
 
@@ -103,7 +103,7 @@ class ComputationInstructionTest {
 
     private void expectFail() {
         this.expectedMnemonic = null;
-        this.expectedMachineCode = -1;
+        this.expectedMachineCode = null;
     }
 
     private void expect(String expectedMnemonic) {
@@ -111,10 +111,11 @@ class ComputationInstructionTest {
     }
 
     private void testMnemonic() {
-        boolean valid = expectedMachineCode != -1;
+        boolean valid = expectedMachineCode != null;
         assertEquals(valid, ComputationInstruction.isValidMnemonic(mnemonic));
 
         if (valid) {
+            assertEquals(expectedMachineCode, new ComputationInstruction(mnemonic).machineCode());
             assertEquals(expectedMachineCode, ComputationInstruction.translate(mnemonic));
         } else {
             assertThrows(IllegalArgumentException.class, () -> ComputationInstruction.translate(mnemonic));
@@ -126,6 +127,7 @@ class ComputationInstructionTest {
         assertEquals(valid, ComputationInstruction.isValidMachineCode(machineCode));
 
         if (valid) {
+            assertEquals(expectedMnemonic, new ComputationInstruction(machineCode).mnemonic());
             assertEquals(expectedMnemonic, ComputationInstruction.translate(machineCode));
         } else {
             assertThrows(IllegalArgumentException.class, () -> ComputationInstruction.translate(machineCode));

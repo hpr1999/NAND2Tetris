@@ -3,6 +3,8 @@ package base;
 import instruction.Symbol;
 import util.BinaryUtil;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public abstract class Instruction {
 
     protected int integerRepresentation;
@@ -19,9 +21,9 @@ public abstract class Instruction {
     protected Instruction(int integerRepresentation, String stringRepresentation) {
         this.integerRepresentation = integerRepresentation;
         this.stringRepresentation = stringRepresentation;
-        if (stringRepresentation.isEmpty() || !isValid())
-            throw new IllegalArgumentException(integerRepresentation + " and "
-                    + stringRepresentation + " do not form a valid Instruction.");
+        checkArgument(!(stringRepresentation.isEmpty())&&isValid(),
+                "%s and %s do not form a valid Instruction.",
+                integerRepresentation,stringRepresentation);
     }
 
     public boolean isValid() {

@@ -9,11 +9,11 @@ public class AddressInstruction extends Instruction {
 
     public AddressInstruction(int integerRepresentation) {
         this(integerRepresentation,
-                ADDRESS_IDENTIFIER.toString() + integerRepresentation);
+                translate(integerRepresentation));
     }
 
     public AddressInstruction(String stringRepresentation) {
-        this(Integer.parseInt(stringRepresentation.substring(1)),
+        this(translate(stringRepresentation),
                 stringRepresentation);
     }
 
@@ -47,7 +47,7 @@ public class AddressInstruction extends Instruction {
     }
 
     public static boolean isValidMnemonic(String stringRepresentation) {
-        int value = Integer.parseInt(stringRepresentation.substring(1));
+        int value = translate(stringRepresentation);
         return stringRepresentation.charAt(0) == ADDRESS_IDENTIFIER &&
                 value <= (BinaryUtil.LARGEST_VALUE >> 1) &&
                 value >= BinaryUtil.SMALLEST_VALUE;
@@ -60,9 +60,17 @@ public class AddressInstruction extends Instruction {
                 Integer.numberOfLeadingZeros(integerRepresentation) > BinaryUtil.BINARY_WORD_LENGTH;
     }
 
+    public static String translate(int machineCode) {
+        return ADDRESS_IDENTIFIER.toString() + machineCode;
+    }
+
     @Override
     public String mnemonic() {
         return stringRepresentation;
+    }
+
+    public static int translate(String mnemonic) {
+        return Integer.parseInt(mnemonic.substring(1));
     }
 
     @Override
