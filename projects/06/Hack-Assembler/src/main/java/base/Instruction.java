@@ -21,9 +21,12 @@ public abstract class Instruction {
     protected Instruction(int integerRepresentation, String stringRepresentation) {
         this.integerRepresentation = integerRepresentation;
         this.stringRepresentation = stringRepresentation;
-        checkArgument(!(stringRepresentation.isEmpty())&&isValid(),
+        checkArgument(!(stringRepresentation.isEmpty()) && isValid(),
                 "%s and %s do not form a valid Instruction.",
-                integerRepresentation,stringRepresentation);
+                integerRepresentation, stringRepresentation);
+    }
+
+    protected Instruction() {
     }
 
     public boolean isValid() {

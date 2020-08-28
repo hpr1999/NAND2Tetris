@@ -21,6 +21,8 @@ public class AddressInstruction extends Instruction {
         super(integerRepresentation, stringRepresentation);
     }
 
+    protected AddressInstruction(){}
+
     @Override
     public boolean hasMachineCode() {
         return true;

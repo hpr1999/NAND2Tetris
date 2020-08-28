@@ -12,22 +12,22 @@ class LabelInstructionTest {
 
     @BeforeEach
     void setUp() {
-        instruction = new LabelInstruction("(label)");
+        instruction = new LabelInstruction("(LABEL)");
     }
 
     @Test
     void validMnemonic() {
         assertTrue(instruction.isValidMnemonic());
-        assertEquals("(label)", instruction.mnemonic());
-        assertEquals("label", instruction.getSymbol().getLabel());
+        assertEquals("(LABEL)", instruction.mnemonic());
+        assertEquals("LABEL", instruction.getSymbol().getLabel());
     }
 
     @Test
     void numbersInLabel() {
-        instruction = new LabelInstruction("(l4b3l)");
+        instruction = new LabelInstruction("(L4B3L)");
         assertTrue(instruction.isValidMnemonic());
-        assertEquals("(l4b3l)", instruction.mnemonic());
-        assertEquals("l4b3l", instruction.getSymbol().getLabel());
+        assertEquals("(L4B3L)", instruction.mnemonic());
+        assertEquals("L4B3L", instruction.getSymbol().getLabel());
     }
 
     @Test
@@ -38,6 +38,11 @@ class LabelInstructionTest {
     @Test
     void invalidMnemonic() {
         assertThrows(IllegalArgumentException.class, () -> new LabelInstruction("label"));
+    }
+
+    @Test
+    void invalidMnemonicLowercase() {
+        assertThrows(IllegalArgumentException.class, () -> new LabelInstruction("(label)"));
     }
 
 

@@ -35,7 +35,9 @@ public class LabelInstruction extends Instruction {
         char first = stringRepresentation.charAt(0);
         int lastIndex = stringRepresentation.length() - 1;
         char lastChar = stringRepresentation.charAt(lastIndex);
-        return first == '(' && lastChar == ')' && !stringRepresentation.substring(1, lastIndex).chars().allMatch(Character::isDigit);
+        CharSequence label = stringRepresentation.subSequence(1, lastIndex);
+
+        return first == '(' && lastChar == ')' && Symbol.isJumpLabelOrBuiltIn(label);
     }
 
     @Override

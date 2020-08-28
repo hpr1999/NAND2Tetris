@@ -3,6 +3,8 @@ package instruction;
 import base.SymbolTable;
 import util.BinaryUtil;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class SymbolAccessInstruction extends AddressInstruction {
 
 //    TODO we need to deal with inbuilt Symbols, but also with variables,
@@ -13,7 +15,7 @@ public class SymbolAccessInstruction extends AddressInstruction {
     private SymbolTable table = null;
 
     public SymbolAccessInstruction(int integerRepresentation) {
-        super(integerRepresentation);
+        this(integerRepresentation, translate(integerRepresentation), null);
     }
 
     public SymbolAccessInstruction(String stringRepresentation, SymbolTable table) {
@@ -21,8 +23,21 @@ public class SymbolAccessInstruction extends AddressInstruction {
     }
 
     protected SymbolAccessInstruction(int integerRepresentation, String stringRepresentation, SymbolTable table) {
-        super(integerRepresentation, stringRepresentation);
+        this.integerRepresentation = integerRepresentation;
+        this.stringRepresentation = stringRepresentation;
         this.table = table;
+        if (table == null) {
+            this.table = new SymbolTable() {
+                @Override
+                public boolean hasSymbol(Symbol symbol) {
+                    return true;
+                }
+            };
+        }
+//        TODO create new Variable Symbols if necessary.
+        checkArgument(!(stringRepresentation.isEmpty()) && isValid(),
+                "%s and %s do not form a valid Instruction.",
+                integerRepresentation, stringRepresentation);
     }
 
     @Override
@@ -37,6 +52,8 @@ public class SymbolAccessInstruction extends AddressInstruction {
     }
 
     public static int translate(String mnemonic, SymbolTable table) {
+//        TODO if necessary, create new Variable Symbol.
+        checkArgument(isValidMnemonic(mnemonic, table), "%s is not a valid mnemonic.", mnemonic);
         int referencedLine = table.getLine(extractSymbol(mnemonic));
         String stringOfLineNumber = BinaryUtil.fixedLengthBinaryString(referencedLine,
                 BinaryUtil.BINARY_WORD_LENGTH - 1);
