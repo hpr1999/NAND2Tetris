@@ -9,18 +9,25 @@ import static com.google.common.base.Preconditions.*;
 
 public class SymbolTable {
 
-    private final Map<Symbol, Integer> symbolTable = new HashMap<>();
-    //    FIXME TEST
-    //    TODO verify 16 is the correct initial value
+    public SymbolTable() {
+        symbolTable = new HashMap<>();
+        initTable();
+    }
+
+    private final Map<Symbol, Integer> symbolTable;
+
     private int nextOpenLineForVariable = 16;
 
     public void addSymbol(Symbol symbol, int lineNumber) {
-        checkState(symbolTable.containsKey(symbol), "An existing Symbol may not be overwritten.");
+        checkArgument(lineNumber >= 0, "Can't assign %s since it is a line number smaller than 0.", lineNumber);
+        checkNotNull(symbol);
+        checkState(!symbolTable.containsKey(symbol), "An existing Symbol may not be overwritten.");
         symbolTable.put(symbol, lineNumber);
     }
 
     public void createVariable(Symbol symbol) {
-        addSymbol(symbol, nextOpenLineForVariable++);
+        addSymbol(symbol, nextOpenLineForVariable);
+        nextOpenLineForVariable++;
     }
 
     public boolean hasSymbol(Symbol symbol) {
@@ -31,5 +38,20 @@ public class SymbolTable {
     public int getLine(Symbol symbol) {
         checkArgument(hasSymbol(symbol));
         return symbolTable.get(symbol);
+    }
+
+    protected void initTable() {
+//        maybe read from config in future
+        for (int i = 0; i <= 15; i++) {
+            addSymbol(new Symbol("R" + i), i);
+        }
+        addSymbol(new Symbol("SCREEN"), 16384);
+        addSymbol(new Symbol("KBD"), 24576);
+        addSymbol(new Symbol("SP"), 0);
+        addSymbol(new Symbol("LCL"), 1);
+        addSymbol(new Symbol("ARG"), 2);
+        addSymbol(new Symbol("THIS"), 3);
+        addSymbol(new Symbol("THAT"), 4);
+
     }
 }
