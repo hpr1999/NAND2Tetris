@@ -21,4 +21,5 @@ class SymbolTest {
         assertNotEquals(s1.hashCode(), s3.hashCode());
         assertNotEquals(s3.hashCode(), s1.hashCode());
     }
+
 }

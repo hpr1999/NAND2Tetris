@@ -1,12 +1,8 @@
 package instruction;
 
-import com.google.common.base.CharMatcher;
-
 import java.util.Objects;
 
 public class Symbol {
-    private static final CharMatcher UPPER_CASE_LETTERS = CharMatcher.inRange('A', 'Z');
-    private static final CharMatcher DIGITS = CharMatcher.inRange('0', '9');
     private String label;
 
     public Symbol(String label) {
@@ -30,9 +26,4 @@ public class Symbol {
         return Objects.hash(label);
     }
 
-//    TODO TEST
-    public static boolean isJumpLabelOrBuiltIn(CharSequence label) {
-        return UPPER_CASE_LETTERS.or(DIGITS).matchesAllOf(label)
-                && UPPER_CASE_LETTERS.matchesAnyOf(label);
-    }
 }
