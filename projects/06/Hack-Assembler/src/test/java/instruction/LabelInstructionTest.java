@@ -31,6 +31,15 @@ class LabelInstructionTest {
     }
 
     @Test
+    void mixedCaseLabel() {
+        instruction = new LabelInstruction("(L4b3l)");
+        assertTrue(instruction.isValidMnemonic());
+        assertEquals("(L4b3l)", instruction.mnemonic());
+        assertEquals("L4b3l", instruction.getSymbol().getLabel());
+    }
+
+
+    @Test
     void numericLabel() {
         assertThrows(IllegalArgumentException.class, () -> new LabelInstruction("(1111)"));
     }
@@ -39,12 +48,6 @@ class LabelInstructionTest {
     void invalidMnemonic() {
         assertThrows(IllegalArgumentException.class, () -> new LabelInstruction("label"));
     }
-
-    @Test
-    void invalidMnemonicLowercase() {
-        assertThrows(IllegalArgumentException.class, () -> new LabelInstruction("(label)"));
-    }
-
 
     @Test
     void emptyMnemonic() {

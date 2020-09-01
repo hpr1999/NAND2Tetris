@@ -1,6 +1,7 @@
 package instruction;
 
 import base.Instruction;
+import util.MnemonicUtil;
 
 public class LabelInstruction extends Instruction {
 
@@ -35,9 +36,9 @@ public class LabelInstruction extends Instruction {
         char first = stringRepresentation.charAt(0);
         int lastIndex = stringRepresentation.length() - 1;
         char lastChar = stringRepresentation.charAt(lastIndex);
-        CharSequence label = stringRepresentation.subSequence(1, lastIndex);
+        String label = stringRepresentation.substring(1, lastIndex);
 
-        return first == '(' && lastChar == ')' && Symbol.isJumpLabelOrBuiltIn(label);
+        return first == '(' && lastChar == ')' && MnemonicUtil.hasLettersAndCanHaveDigits(label);
     }
 
     @Override
