@@ -67,16 +67,25 @@ class IntegrationTest {
         testFile(
                 Paths.get(prefix + ".asm"),
                 Paths.get(prefix + ".hack"),
-                Paths.get(prefix + ".cmp")
+                Paths.get(prefix + ".cmp"),
+                Paths.get(prefix + ".hack.asm"),
+                Paths.get(prefix + ".hack.smartasm"),
+                Paths.get(prefix + ".hack.smartasm.hack")
         );
     }
 
-    private void testFile(Path asmFile, Path hackFile, Path cmpFile) throws IOException {
-        Path disassemblyPath = hackFile.resolveSibling(hackFile.getFileName() + ".asm");
+    private void testFile(Path asmFile, Path hackFile, Path cmpFile, Path disassemblyFile, Path smartDisassemblyFile, Path smartHackFile) throws IOException {
         Files.deleteIfExists(hackFile);
-        Files.deleteIfExists(disassemblyPath);
+        Files.deleteIfExists(disassemblyFile);
+        Files.deleteIfExists(smartDisassemblyFile);
+        Files.deleteIfExists(smartHackFile);
+
         Main.assemble(asmFile, hackFile);
-        Main.disassemble(hackFile, disassemblyPath);
+        Main.disassemble(hackFile, disassemblyFile);
+        Main.smartDisassemble(hackFile, smartDisassemblyFile);
+        Main.assemble(smartDisassemblyFile, smartHackFile);
+
         assertEquals(Files.lines(cmpFile).collect(Collectors.toList()), Files.lines(hackFile).collect(Collectors.toList()));
+        assertEquals(Files.lines(cmpFile).collect(Collectors.toList()), Files.lines(smartHackFile).collect(Collectors.toList()));
     }
 }

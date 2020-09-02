@@ -16,7 +16,7 @@ public class ComputationInstruction extends Instruction {
     public static final int COMPUTATION_BINARY_OFFSET = 6;
     public static final int MARKER_BINARY_OFFSET = 13;
 
-//    FIXME config file?
+    //    FIXME config file?
     static {
         jumps.put(null, 0b000);
         jumps.put("JGT", 0b001);
@@ -107,7 +107,7 @@ public class ComputationInstruction extends Instruction {
     private static String translatePart(int machineCode, BiMap<String, Integer> partMap) {
         checkArgument(partMap.inverse().containsKey(machineCode),
                 "%s is neither a valid computation, destination nor jump machineCode fragment.",
-                                    machineCode);
+                machineCode);
         return partMap.inverse().get(machineCode);
     }
 
@@ -224,4 +224,8 @@ public class ComputationInstruction extends Instruction {
         return CommandType.COMPUTATION;
     }
 
+    public boolean hasJump() {
+        String jmpMnemonic = splitMnemonic(mnemonic())[2];
+        return jmpMnemonic != null && jumps.containsKey(jmpMnemonic);
+    }
 }

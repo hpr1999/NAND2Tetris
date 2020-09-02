@@ -63,4 +63,13 @@ public abstract class Instruction {
     public enum CommandType {
         ADDRESS, COMPUTATION, LABEL
     }
+
+    @Override
+    public String toString() {
+        if (hasMnemonic())
+            return mnemonic();
+        if (hasMachineCode())
+            return "" + machineCode();
+        return "An instance of " + getClass().toString();
+    }
 }

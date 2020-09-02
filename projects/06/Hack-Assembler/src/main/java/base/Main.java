@@ -2,6 +2,7 @@ package base;
 
 import parsing.Assembler;
 import parsing.Disassembler;
+import parsing.SmartDisassembler;
 import parsing.Translator;
 
 import java.io.BufferedWriter;
@@ -28,6 +29,11 @@ public class Main {
 
     public static void disassemble(Path hackFilePath, Path asmFilePath) throws IOException {
         Translator disassembler = new Disassembler(hackFilePath, asmFilePath);
+        translate(disassembler);
+    }
+
+    public static void smartDisassemble(Path hackFilePath, Path asmFilePath) throws IOException {
+        Translator disassembler = new SmartDisassembler(hackFilePath, asmFilePath);
         translate(disassembler);
     }
 

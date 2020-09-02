@@ -11,9 +11,9 @@ import java.nio.file.Path;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Disassembler implements Translator {
-    private IterableFile machineCodeFile;
-    private Path hackFilePath;
-    private Path assemblerFilePath;
+    protected IterableFile machineCodeFile;
+    protected Path hackFilePath;
+    protected Path assemblerFilePath;
 
 
     public Disassembler(Path hackFilePath, Path assemblerFilePath) {
@@ -26,7 +26,7 @@ public class Disassembler implements Translator {
     }
 
 
-    private Instruction parseInstruction(int machineCode) {
+    protected Instruction parseInstruction(int machineCode) {
         if (AddressInstruction.isValidMachineCode(machineCode)) {
             return new AddressInstruction(machineCode);
         } else if (ComputationInstruction.isValidMachineCode(machineCode)) {

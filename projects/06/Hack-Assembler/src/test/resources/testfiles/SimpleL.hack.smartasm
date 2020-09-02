@@ -1,0 +1,6 @@
+(LABEL1)
+@41
+D=M+1
+D&A
+@LABEL1
+0;JNE
