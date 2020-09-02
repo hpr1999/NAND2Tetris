@@ -13,18 +13,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AssemblerFileTest {
+class IterableFileTest {
 
-    private AssemblerFile assemblerFile;
+    private IterableFile assemblerFile;
 
     @BeforeEach
     private void setup() {
-        assemblerFile = new AssemblerFile(getTestFile());
+        assemblerFile = new IterableFile(getTestFile());
     }
 
     @Test
     void invalidPath() {
-        assemblerFile = new AssemblerFile(Paths.get(""));
+        assemblerFile = new IterableFile(Paths.get(""));
         Iterator<String> iterator = assemblerFile.iterator();
         assertFalse(iterator.hasNext());
         assertNull(iterator.next());

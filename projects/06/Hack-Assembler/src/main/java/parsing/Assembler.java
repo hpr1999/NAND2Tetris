@@ -18,13 +18,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Assembler {
 
     private SymbolTable table;
-    private AssemblerFile file;
+    private IterableFile file;
     private BufferedWriter writer;
 
-    public Assembler(AssemblerFile file, BufferedWriter writer) {
+    public Assembler(IterableFile assemblerFile, BufferedWriter writer) {
         table = new SymbolTable();
-        checkNotNull(file);
-        this.file = file;
+        checkNotNull(assemblerFile);
+        this.file = assemblerFile;
         this.writer = writer;
     }
 

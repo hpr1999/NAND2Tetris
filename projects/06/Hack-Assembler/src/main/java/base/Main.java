@@ -1,7 +1,7 @@
 package base;
 
 import parsing.Assembler;
-import parsing.AssemblerFile;
+import parsing.IterableFile;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class Main {
         checkArgument(Files.exists(asmFilePath),
                 "The input file %s does not exist.", asmFilePath.toAbsolutePath());
 
-        AssemblerFile assemblerFile = new AssemblerFile(asmFilePath);
+        IterableFile assemblerFile = new IterableFile(asmFilePath);
         Files.createFile(hackFilePath);
         BufferedWriter writer = Files.newBufferedWriter(hackFilePath, StandardOpenOption.APPEND);
         Assembler assembler = new Assembler(assemblerFile, writer);

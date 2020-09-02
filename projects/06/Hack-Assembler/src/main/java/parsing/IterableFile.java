@@ -9,11 +9,11 @@ import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class AssemblerFile implements Iterable<String> {
+public class IterableFile implements Iterable<String> {
 
     private final Path filePath;
 
-    public AssemblerFile(Path filePath) {
+    public IterableFile(Path filePath) {
         checkArgument(Files.exists(filePath), "The file %s does not exist.", filePath.toAbsolutePath());
         this.filePath = filePath;
     }
