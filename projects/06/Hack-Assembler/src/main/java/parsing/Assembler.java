@@ -35,7 +35,7 @@ public class Assembler {
 
     private void considerSymbols() {
         passThroughFile((line, mnemonic) -> {
-            Instruction ins = parseInstruction(mnemonic);
+            Instruction ins = parseInstruction(mnemonic, false);
             if (ins.providesSymbol()) table.addSymbol(ins.getSymbol(), line);
             return ins.hasMachineCode();
         });
@@ -44,7 +44,7 @@ public class Assembler {
 
     private void translateToMachineCode() {
         passThroughFile((line, mnemonic) -> {
-            Instruction ins = parseInstruction(mnemonic);
+            Instruction ins = parseInstruction(mnemonic, true);
             if (!ins.hasMachineCode()) return false;
 
             try {
@@ -75,7 +75,7 @@ public class Assembler {
     }
 
     // TODO ausgliedern, die dependency ist hier unnötig
-    private Instruction parseInstruction(String mnemonic) {
+    private Instruction parseInstruction(String mnemonic, boolean createVariables) {
         Instruction result = null;
 
         if (LabelInstruction.isValidMnemonic(mnemonic)) {
@@ -83,7 +83,7 @@ public class Assembler {
         } else if (AddressInstruction.isValidMnemonic(mnemonic)) {
             result = new AddressInstruction(mnemonic);
         } else if (SymbolAccessInstruction.isValidMnemonic(mnemonic)) {
-            result = new SymbolAccessInstruction(mnemonic, table);
+            result = new SymbolAccessInstruction(mnemonic, table, createVariables);
         } else if (ComputationInstruction.isValidMnemonic(mnemonic)) {
             result = new ComputationInstruction(mnemonic);
         }

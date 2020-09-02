@@ -77,7 +77,7 @@ class SymbolAccessInstructionTest {
     }
 
     private void test(String mnemonic, int machineCode) {
-        instruction = new SymbolAccessInstruction(mnemonic, table);
+        instruction = new SymbolAccessInstruction(mnemonic, table,true);
         assertEquals(machineCode, instruction.machineCode());
     }
 }

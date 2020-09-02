@@ -6,13 +6,14 @@ import util.MnemonicUtil;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+//FIXME was schöneres als create Variable
 public class SymbolAccessInstruction extends AddressInstruction {
 
-    public SymbolAccessInstruction(String stringRepresentation, SymbolTable table) {
-        this(translate(stringRepresentation, table), stringRepresentation, table);
+    public SymbolAccessInstruction(String stringRepresentation, SymbolTable table, boolean createVariable) {
+        this(translate(stringRepresentation, table, createVariable), stringRepresentation, table, createVariable);
     }
 
-    protected SymbolAccessInstruction(int integerRepresentation, String stringRepresentation, SymbolTable table) {
+    protected SymbolAccessInstruction(int integerRepresentation, String stringRepresentation, SymbolTable table, boolean createVariable) {
 
         checkNotNull(table);
         checkNotNull(stringRepresentation);
@@ -21,7 +22,7 @@ public class SymbolAccessInstruction extends AddressInstruction {
         this.stringRepresentation = stringRepresentation;
         Symbol symbol = extractSymbol(stringRepresentation);
 
-        createVariableIfNecessary(table, symbol);
+        if (createVariable) createVariableIfNecessary(table, symbol);
         checkArgument(!(stringRepresentation.isEmpty()) && isValid(),
                 "%s and %s do not form a valid Instruction.",
                 integerRepresentation, stringRepresentation);
@@ -42,9 +43,16 @@ public class SymbolAccessInstruction extends AddressInstruction {
         return '@' == stringRepresentation.charAt(0) && MnemonicUtil.validIdentifier(stringRepresentation.substring(1));
     }
 
-    public static int translate(String mnemonic, SymbolTable table) {
-        createVariableIfNecessary(table, extractSymbol(mnemonic));
+    public static int translate(String mnemonic, SymbolTable table, boolean createVariable) {
+//        FIXME
+        if (createVariable) createVariableIfNecessary(table, extractSymbol(mnemonic));
+
         checkArgument(isValidMnemonic(mnemonic), "%s is not a valid mnemonic.", mnemonic);
+
+//        FIXME
+        if (!createVariable)
+            return table.hasSymbol(extractSymbol(mnemonic)) ? table.getLine(extractSymbol(mnemonic)) : 0;
+
         return table.getLine(extractSymbol(mnemonic));
     }
 
