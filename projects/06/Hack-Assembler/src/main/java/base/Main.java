@@ -1,7 +1,8 @@
 package base;
 
 import parsing.Assembler;
-import parsing.IterableFile;
+import parsing.Disassembler;
+import parsing.Translator;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -21,18 +22,28 @@ public class Main {
     }
 
     public static void assemble(Path asmFilePath, Path hackFilePath) throws IOException {
-        checkNotNull(asmFilePath);
-        checkNotNull(hackFilePath);
-        checkArgument(!Files.exists(hackFilePath),
-                "The output file %s already exists.", hackFilePath.toAbsolutePath());
-        checkArgument(Files.exists(asmFilePath),
-                "The input file %s does not exist.", asmFilePath.toAbsolutePath());
+        Translator assembler = new Assembler(asmFilePath, hackFilePath);
+        translate(assembler);
+    }
 
-        IterableFile assemblerFile = new IterableFile(asmFilePath);
-        Files.createFile(hackFilePath);
-        BufferedWriter writer = Files.newBufferedWriter(hackFilePath, StandardOpenOption.APPEND);
-        Assembler assembler = new Assembler(assemblerFile, writer);
-        assembler.assemble();
+    public static void disassemble(Path hackFilePath, Path asmFilePath) throws IOException {
+        Translator disassembler = new Disassembler(hackFilePath, asmFilePath);
+        translate(disassembler);
+    }
+
+    private static void translate(Translator translator) throws IOException {
+        checkNotNull(translator.getInputFilePath());
+        checkNotNull(translator.getOutputFilePath());
+        checkArgument(!Files.exists(translator.getOutputFilePath()),
+                "The output file %s already exists.", translator.getOutputFilePath().toAbsolutePath());
+        checkArgument(Files.exists(translator.getInputFilePath()),
+                "The input file %s does not exist.", translator.getInputFilePath().toAbsolutePath());
+
+        Files.createFile(translator.getOutputFilePath());
+        BufferedWriter writer = Files.newBufferedWriter(translator.getOutputFilePath(), StandardOpenOption.APPEND);
+        translator.translate(writer);
         writer.close();
     }
+
+
 }

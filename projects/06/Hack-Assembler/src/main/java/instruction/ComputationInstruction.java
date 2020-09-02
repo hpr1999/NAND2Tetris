@@ -16,6 +16,7 @@ public class ComputationInstruction extends Instruction {
     public static final int COMPUTATION_BINARY_OFFSET = 6;
     public static final int MARKER_BINARY_OFFSET = 13;
 
+//    FIXME config file?
     static {
         jumps.put(null, 0b000);
         jumps.put("JGT", 0b001);

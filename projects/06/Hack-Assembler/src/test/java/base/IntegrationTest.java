@@ -72,8 +72,11 @@ class IntegrationTest {
     }
 
     private void testFile(Path asmFile, Path hackFile, Path cmpFile) throws IOException {
+        Path disassemblyPath = hackFile.resolveSibling(hackFile.getFileName() + ".asm");
         Files.deleteIfExists(hackFile);
+        Files.deleteIfExists(disassemblyPath);
         Main.assemble(asmFile, hackFile);
+        Main.disassemble(hackFile, disassemblyPath);
         assertEquals(Files.lines(cmpFile).collect(Collectors.toList()), Files.lines(hackFile).collect(Collectors.toList()));
     }
 }

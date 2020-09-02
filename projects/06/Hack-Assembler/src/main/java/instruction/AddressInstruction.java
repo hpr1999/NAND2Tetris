@@ -59,8 +59,12 @@ public class AddressInstruction extends Instruction {
     @Override
     public boolean isValidMachineCode() {
 //        First bit of 16 bit number is 0
-        return super.isValidMachineCode() &&
-                Integer.numberOfLeadingZeros(integerRepresentation) > BinaryUtil.BINARY_WORD_LENGTH;
+        return isValidMachineCode(integerRepresentation);
+    }
+
+    public static boolean isValidMachineCode(int machineCode) {
+        return Instruction.isValidMachineCode(machineCode)
+                && Integer.numberOfLeadingZeros(machineCode) > BinaryUtil.BINARY_WORD_LENGTH;
     }
 
     public static String translate(int machineCode) {
