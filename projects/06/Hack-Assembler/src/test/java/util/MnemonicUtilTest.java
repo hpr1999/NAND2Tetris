@@ -81,6 +81,11 @@ class MnemonicUtilTest {
         negative("|232423WAa");
     }
 
+    @Test
+    void whitespace() {
+        assertEquals("123456789", MnemonicUtil.stripAllWhiteSpace("1 2 3  456    7\n8\t9"));
+    }
+
     private void positive(String testData) {
         assertTrue(functionUnderTest.apply(testData));
     }
