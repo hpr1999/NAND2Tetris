@@ -38,7 +38,7 @@ public class LabelInstruction extends Instruction {
         char lastChar = stringRepresentation.charAt(lastIndex);
         String label = stringRepresentation.substring(1, lastIndex);
 
-        return first == '(' && lastChar == ')' && MnemonicUtil.hasLettersAndCanHaveDigits(label);
+        return first == '(' && lastChar == ')' && MnemonicUtil.validIdentifier(label);
     }
 
     @Override

@@ -9,6 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class Main {
 
     public static void main(String[] args) throws IOException {
@@ -18,9 +21,18 @@ public class Main {
     }
 
     public static void assemble(Path asmFilePath, Path hackFilePath) throws IOException {
+        checkNotNull(asmFilePath);
+        checkNotNull(hackFilePath);
+        checkArgument(!Files.exists(hackFilePath),
+                "The output file %s already exists.", hackFilePath.toAbsolutePath());
+        checkArgument(Files.exists(asmFilePath),
+                "The input file %s does not exist.", asmFilePath.toAbsolutePath());
+
         AssemblerFile assemblerFile = new AssemblerFile(asmFilePath);
-        BufferedWriter writer = Files.newBufferedWriter(hackFilePath, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+        Files.createFile(hackFilePath);
+        BufferedWriter writer = Files.newBufferedWriter(hackFilePath, StandardOpenOption.APPEND);
         Assembler assembler = new Assembler(assemblerFile, writer);
         assembler.assemble();
+        writer.close();
     }
 }

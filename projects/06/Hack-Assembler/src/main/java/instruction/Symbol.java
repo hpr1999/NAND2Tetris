@@ -26,4 +26,10 @@ public class Symbol {
         return Objects.hash(label);
     }
 
+    @Override
+    public String toString() {
+        return "Symbol{" +
+                "label='" + label + '\'' +
+                '}';
+    }
 }

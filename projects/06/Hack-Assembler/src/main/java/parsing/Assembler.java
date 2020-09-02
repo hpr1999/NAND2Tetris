@@ -59,10 +59,18 @@ public class Assembler {
     private void passThroughFile(BiFunction<Integer, String, Boolean> increaseLineNumberBasedOnLineNumberAndMnemonic) {
         int lineNumber = 0;
         for (String line : file) {
-            String mnemonic = MnemonicUtil.stripAllWhiteSpace(line);
-            if (!mnemonic.isBlank() &&
-                    increaseLineNumberBasedOnLineNumberAndMnemonic.apply(lineNumber, mnemonic))
-                lineNumber++;
+            String relevant = MnemonicUtil.stripComments(line);
+            String mnemonic = MnemonicUtil.stripAllWhiteSpace(relevant);
+            try {
+                if (!mnemonic.isBlank() &&
+                        increaseLineNumberBasedOnLineNumberAndMnemonic.apply(lineNumber, mnemonic))
+                    lineNumber++;
+            } catch (Throwable t) {
+                System.err.println("Current lineNumber: " + lineNumber);
+                System.err.println("Current lineText: " + line);
+                System.err.println("Current mnemonic: " + mnemonic);
+                throw t;
+            }
         }
     }
 

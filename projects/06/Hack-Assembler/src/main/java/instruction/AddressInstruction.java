@@ -21,7 +21,8 @@ public class AddressInstruction extends Instruction {
         super(integerRepresentation, stringRepresentation);
     }
 
-    protected AddressInstruction(){}
+    protected AddressInstruction() {
+    }
 
     @Override
     public boolean hasMachineCode() {
@@ -72,7 +73,11 @@ public class AddressInstruction extends Instruction {
     }
 
     public static int translate(String mnemonic) {
-        return Integer.parseInt(mnemonic.substring(1));
+        try {
+            return Integer.parseInt(mnemonic.substring(1));
+        } catch (NumberFormatException ne) {
+            return -1;
+        }
     }
 
     @Override

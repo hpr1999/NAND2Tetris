@@ -11,7 +11,7 @@ public class MnemonicUtil {
     private static final CharMatcher LOWER_CASE_LETTERS = CharMatcher.inRange('a', 'z');
     private static final CharMatcher LETTERS = UPPER_CASE_LETTERS.or(LOWER_CASE_LETTERS);
     private static final CharMatcher DIGITS = CharMatcher.inRange('0', '9');
-
+    private static final CharMatcher ALLOWED_SPECIAL_CHARS = CharMatcher.anyOf("-_");
 
     public static boolean numeric(String string) {
         checkNotNull(string);
@@ -31,6 +31,12 @@ public class MnemonicUtil {
         return LETTERS.matchesAllOf(string);
     }
 
+    public static boolean validIdentifier(String string) {
+        checkNotNull(string);
+        checkArgument(!string.isEmpty());
+        return LETTERS.matchesAnyOf(string) && LETTERS.or(DIGITS).or(ALLOWED_SPECIAL_CHARS).matchesAllOf(string);
+    }
+
     public static boolean hasLettersAndCanHaveDigits(String string) {
         checkNotNull(string);
         checkArgument(!string.isEmpty());
@@ -39,5 +45,12 @@ public class MnemonicUtil {
 
     public static String stripAllWhiteSpace(String string) {
         return CharMatcher.whitespace().removeFrom(string);
+    }
+
+    public static String stripComments(String line) {
+        if (line.contains("//")) {
+            return line.substring(0, line.indexOf("//"));
+        }
+        return line;
     }
 }
