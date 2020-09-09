@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.BiFunction;
 
+//TODO TEST
 public class Nand2TetrisArgumentProcessor extends GenericArgumentProcessor {
 
     public static final Argument<BiFunction<Path, Path, Translator>> OPERATION = new Argument<>(

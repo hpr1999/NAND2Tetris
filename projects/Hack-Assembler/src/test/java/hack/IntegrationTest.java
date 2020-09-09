@@ -1,6 +1,5 @@
 package hack;
 
-import base.Main;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -9,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
+import static base.Main.main;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class IntegrationTest {
@@ -64,7 +64,7 @@ class IntegrationTest {
     }
 
     private void testFile(String name) throws IOException {
-        String prefix = "C:\\Development\\Uni\\nand2tetris\\projects\\06\\Hack-Assembler\\src\\test\\resources\\testfiles\\" + name;
+        String prefix = "src\\test\\resources\\testfiles\\" + name;
         testFile(
                 Paths.get(prefix + ".asm"),
                 Paths.get(prefix + ".hack"),
@@ -81,12 +81,28 @@ class IntegrationTest {
         Files.deleteIfExists(smartDisassemblyFile);
         Files.deleteIfExists(smartHackFile);
 
-        Main.assemble(asmFile, hackFile);
-        Main.disassemble(hackFile, disassemblyFile);
-        Main.smartDisassemble(hackFile, smartDisassemblyFile);
-        Main.assemble(smartDisassemblyFile, smartHackFile);
+        assemble(asmFile, hackFile);
+        disassemble(hackFile, disassemblyFile);
+        smartDisassemble(hackFile, smartDisassemblyFile);
+        assemble(smartDisassemblyFile, smartHackFile);
 
         assertEquals(Files.lines(cmpFile).collect(Collectors.toList()), Files.lines(hackFile).collect(Collectors.toList()));
         assertEquals(Files.lines(cmpFile).collect(Collectors.toList()), Files.lines(smartHackFile).collect(Collectors.toList()));
+    }
+
+    private void translate(String operation, Path input, Path output) throws IOException {
+        main(new String[]{operation, input.toAbsolutePath().toString(), output.toAbsolutePath().toString()});
+    }
+
+    private void assemble(Path input, Path output) throws IOException {
+        translate("assemble", input, output);
+    }
+
+    private void disassemble(Path input, Path output) throws IOException {
+        translate("disassemble", input, output);
+    }
+
+    private void smartDisassemble(Path input, Path output) throws IOException {
+        translate("smart-disassemble", input, output);
     }
 }

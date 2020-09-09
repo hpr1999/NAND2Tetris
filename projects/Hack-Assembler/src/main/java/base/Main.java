@@ -1,8 +1,5 @@
 package base;
 
-import hack.parsing.Assembler;
-import hack.parsing.Disassembler;
-import hack.parsing.SmartDisassembler;
 import hack.parsing.Translator;
 
 import java.io.BufferedWriter;
@@ -11,30 +8,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import static base.Nand2TetrisArgumentProcessor.*;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        ArgumentProcessor processor = new ArgumentProcessor(args);
-        processor.process();
-        assemble(processor.getAsmFilePath(), processor.getHackFilePath());
-    }
-
-    public static void assemble(Path asmFilePath, Path hackFilePath) throws IOException {
-        Translator assembler = new Assembler(asmFilePath, hackFilePath);
-        translate(assembler);
-    }
-
-    public static void disassemble(Path hackFilePath, Path asmFilePath) throws IOException {
-        Translator disassembler = new Disassembler(hackFilePath, asmFilePath);
-        translate(disassembler);
-    }
-
-    public static void smartDisassemble(Path hackFilePath, Path asmFilePath) throws IOException {
-        Translator disassembler = new SmartDisassembler(hackFilePath, asmFilePath);
-        translate(disassembler);
+        Nand2TetrisArgumentProcessor argumentProcessor = new Nand2TetrisArgumentProcessor(args);
+        Path input = argumentProcessor.get(INPUT_FILE);
+        Path output = argumentProcessor.get(OUTPUT_FILE);
+        Translator translator = argumentProcessor.get(OPERATION).apply(input, output);
+        translate(translator);
     }
 
     private static void translate(Translator translator) throws IOException {
@@ -50,6 +35,4 @@ public class Main {
         translator.translate(writer);
         writer.close();
     }
-
-
 }

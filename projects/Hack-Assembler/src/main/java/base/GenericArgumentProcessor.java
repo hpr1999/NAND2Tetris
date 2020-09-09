@@ -5,6 +5,7 @@ import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.*;
 
+// TODO TEST
 public class GenericArgumentProcessor {
 
     private final Map<Argument, Object> valuesPerArgument = new HashMap<>();
