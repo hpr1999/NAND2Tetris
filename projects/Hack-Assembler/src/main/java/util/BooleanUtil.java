@@ -1,2 +1,4 @@
-package util;public class BooleanUtil {
+package util;
+
+public class BooleanUtil {
 }
