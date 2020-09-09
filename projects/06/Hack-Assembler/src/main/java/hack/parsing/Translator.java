@@ -1,4 +1,4 @@
-package parsing;
+package hack.parsing;
 
 import java.io.BufferedWriter;
 import java.nio.file.Path;

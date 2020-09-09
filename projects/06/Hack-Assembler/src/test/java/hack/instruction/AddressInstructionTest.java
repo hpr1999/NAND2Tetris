@@ -1,6 +1,6 @@
-package instruction;
+package hack.instruction;
 
-import base.Instruction;
+import hack.base.Instruction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

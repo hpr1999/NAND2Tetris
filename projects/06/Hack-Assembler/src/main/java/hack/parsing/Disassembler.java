@@ -1,8 +1,9 @@
-package parsing;
+package hack.parsing;
 
-import base.Instruction;
-import instruction.AddressInstruction;
-import instruction.ComputationInstruction;
+import base.IterableFile;
+import hack.base.Instruction;
+import hack.instruction.AddressInstruction;
+import hack.instruction.ComputationInstruction;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -45,7 +46,6 @@ public class Disassembler implements Translator {
                 int machineCode = Integer.parseInt(s, 2);
                 Instruction ins = parseInstruction(machineCode);
 //            TODO
-
                 writer.write(ins.mnemonic() + '\n');
             } catch (IOException e) {
                 e.printStackTrace();

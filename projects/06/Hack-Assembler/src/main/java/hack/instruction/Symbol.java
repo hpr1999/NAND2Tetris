@@ -1,4 +1,4 @@
-package instruction;
+package hack.instruction;
 
 import java.util.Objects;
 

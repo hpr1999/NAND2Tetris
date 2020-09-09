@@ -1,6 +1,6 @@
-package instruction;
+package hack.instruction;
 
-import base.SymbolTable;
+import hack.base.SymbolTable;
 import util.MnemonicUtil;
 
 import static com.google.common.base.Preconditions.checkArgument;

@@ -1,9 +1,9 @@
 package base;
 
-import parsing.Assembler;
-import parsing.Disassembler;
-import parsing.SmartDisassembler;
-import parsing.Translator;
+import hack.parsing.Assembler;
+import hack.parsing.Disassembler;
+import hack.parsing.SmartDisassembler;
+import hack.parsing.Translator;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

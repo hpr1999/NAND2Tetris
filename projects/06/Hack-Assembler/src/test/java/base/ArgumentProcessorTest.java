@@ -11,7 +11,9 @@ class ArgumentProcessorTest {
 
     @Test
     void noArguments() {
-        assertNull(new ArgumentProcessor(new String[]{}).getAsmFilePath());
+        assertThrows(IllegalArgumentException.class,
+                () -> new ArgumentProcessor(new String[]{}).getAsmFilePath());
+
     }
 
     @Test

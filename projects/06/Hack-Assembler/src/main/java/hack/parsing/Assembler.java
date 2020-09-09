@@ -1,11 +1,12 @@
-package parsing;
+package hack.parsing;
 
-import base.Instruction;
-import base.SymbolTable;
-import instruction.AddressInstruction;
-import instruction.ComputationInstruction;
-import instruction.LabelInstruction;
-import instruction.SymbolAccessInstruction;
+import base.IterableFile;
+import hack.base.Instruction;
+import hack.base.SymbolTable;
+import hack.instruction.AddressInstruction;
+import hack.instruction.ComputationInstruction;
+import hack.instruction.LabelInstruction;
+import hack.instruction.SymbolAccessInstruction;
 import util.MnemonicUtil;
 
 import java.io.BufferedWriter;
@@ -52,10 +53,11 @@ public class Assembler implements Translator {
         passThroughFile((line, mnemonic) -> {
             Instruction ins = parseInstruction(mnemonic, true);
             if (!ins.hasMachineCode()) return false;
-//TODO
+
             try {
                 writer.write(ins.machineCodeString() + '\n');
             } catch (IOException e) {
+                //TODO
                 e.printStackTrace();
             }
             return true;
@@ -94,7 +96,7 @@ public class Assembler implements Translator {
             result = new ComputationInstruction(mnemonic);
         }
 
-        checkArgument(result != null, "The mnemonic %s cannot be transformed into an instruction", mnemonic);
+        checkArgument(result != null, "The mnemonic %s cannot be transformed into an hack.instruction", mnemonic);
         return result;
     }
 

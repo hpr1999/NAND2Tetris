@@ -1,6 +1,6 @@
-package base;
+package hack.base;
 
-import instruction.Symbol;
+import hack.instruction.Symbol;
 import util.BinaryUtil;
 
 import static com.google.common.base.Preconditions.checkArgument;

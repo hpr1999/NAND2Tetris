@@ -1,6 +1,6 @@
-package instruction;
+package hack.instruction;
 
-import base.SymbolTable;
+import hack.base.SymbolTable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

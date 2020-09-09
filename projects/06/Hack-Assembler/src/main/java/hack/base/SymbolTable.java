@@ -1,8 +1,8 @@
-package base;
+package hack.base;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import instruction.Symbol;
+import hack.instruction.Symbol;
 
 import java.util.HashMap;
 import java.util.Map;

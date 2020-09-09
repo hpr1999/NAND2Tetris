@@ -1,6 +1,6 @@
-package base;
+package hack.base;
 
-import instruction.Symbol;
+import hack.instruction.Symbol;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

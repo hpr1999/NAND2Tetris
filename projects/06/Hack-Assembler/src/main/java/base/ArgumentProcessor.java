@@ -2,51 +2,64 @@ package base;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ArgumentProcessor {
 
-    private static final String asmFileKey = "asm-file-path";
-    private static final String hackFileKey = "hack-file-path";
-    private String[] arguments;
-    private Map<String, String> argumentValues;
+    private static final String ASM_FILE_PATH = "asm-file-path";
+    private static final String HACK_FILE_PATH = "hack-file-path";
+
+    private Map<String, Object> argumentValues;
+    private final Deque<String> arguments;
 
     public ArgumentProcessor(String[] arguments) {
-        this.arguments = arguments;
+        this.arguments = new ArrayDeque<>(Arrays.asList(arguments));
     }
 
     public boolean process() {
         argumentValues = new HashMap<>();
-        if (arguments.length > 0 && arguments[0] != null) {
-            argumentValues.put(asmFileKey, arguments[0]);
 
-            if (arguments.length > 1 && arguments[1] != null)
-                argumentValues.put(hackFileKey, arguments[1]);
-            else argumentValues.put(hackFileKey, hackFileFromAsmFile());
-
+        if (tryParsingAnotherArgument(ASM_FILE_PATH, Paths::get,
+                () -> {throw new IllegalArgumentException();})) {
+            tryParsingAnotherArgument(HACK_FILE_PATH, Paths::get, this::hackFileFromAsmFile);
             return true;
-        } else return false;
+        }
+        return false;
+
+    }
+
+    private boolean tryParsingAnotherArgument(String argumentKey, Function<String, Object> transformer, Supplier defaultSupplier) {
+        checkNotNull(argumentKey);
+        checkNotNull(transformer);
+        checkNotNull(defaultSupplier);
+        if (!arguments.isEmpty()) {
+            argumentValues.put(argumentKey, transformer.apply(arguments.pop()));
+            return true;
+        } else {
+            argumentValues.put(argumentKey, defaultSupplier.get());
+            return false;
+        }
     }
 
     public Path getAsmFilePath() {
-        if (argumentValues != null || this.process())
-            return Paths.get(argumentValues.get(asmFileKey));
-
-        return null;
+        return get(ASM_FILE_PATH, Path.class);
     }
 
     public Path getHackFilePath() {
-        if (argumentValues != null || this.process())
-            return Paths.get(argumentValues.get(hackFileKey));
-
-        return null;
+        return get(HACK_FILE_PATH, Path.class);
     }
 
-    private String hackFileFromAsmFile() {
-        String asm = argumentValues.get(asmFileKey);
-        int index = asm.lastIndexOf('.');
-        index = index != -1 ? index : asm.length() - 1;
-        return asm.substring(0, index) + ".hack";
+    private <T> T get(String argumentKey, Class<T> tClass) {
+        if (argumentValues != null || this.process())
+            return (T) argumentValues.get(argumentKey);
+        throw new IllegalArgumentException();
+    }
+
+    private Path hackFileFromAsmFile() {
+        return getAsmFilePath().resolveSibling(getAsmFilePath().getFileName() + ".hack");
     }
 }

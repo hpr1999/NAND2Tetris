@@ -1,6 +1,6 @@
-package instruction;
+package hack.instruction;
 
-import base.Instruction;
+import hack.base.Instruction;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import util.BinaryUtil;

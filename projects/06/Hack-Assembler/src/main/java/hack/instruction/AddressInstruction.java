@@ -1,6 +1,6 @@
-package instruction;
+package hack.instruction;
 
-import base.Instruction;
+import hack.base.Instruction;
 import util.BinaryUtil;
 
 public class AddressInstruction extends Instruction {

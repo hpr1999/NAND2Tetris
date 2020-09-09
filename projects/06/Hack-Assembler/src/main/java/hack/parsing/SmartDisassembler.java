@@ -1,10 +1,10 @@
-package parsing;
+package hack.parsing;
 
-import base.Instruction;
-import base.SymbolTable;
-import instruction.ComputationInstruction;
-import instruction.LabelInstruction;
-import instruction.SymbolAccessInstruction;
+import hack.base.Instruction;
+import hack.base.SymbolTable;
+import hack.instruction.ComputationInstruction;
+import hack.instruction.LabelInstruction;
+import hack.instruction.SymbolAccessInstruction;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
