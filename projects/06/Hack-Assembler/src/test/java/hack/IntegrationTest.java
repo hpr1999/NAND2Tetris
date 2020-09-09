@@ -1,5 +1,6 @@
-package base;
+package hack;
 
+import base.Main;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
