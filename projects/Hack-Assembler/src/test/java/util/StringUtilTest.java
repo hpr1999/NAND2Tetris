@@ -6,29 +6,29 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MnemonicUtilTest {
+class StringUtilTest {
 
     private Function<String, Boolean> functionUnderTest;
 
     @Test
     void nulls() {
-        assertThrows(NullPointerException.class, () -> MnemonicUtil.numeric(null));
-        assertThrows(NullPointerException.class, () -> MnemonicUtil.alphanumeric(null));
-        assertThrows(NullPointerException.class, () -> MnemonicUtil.letters(null));
-        assertThrows(NullPointerException.class, () -> MnemonicUtil.hasLettersAndCanHaveDigits(null));
+        assertThrows(NullPointerException.class, () -> StringUtil.numeric(null));
+        assertThrows(NullPointerException.class, () -> StringUtil.alphanumeric(null));
+        assertThrows(NullPointerException.class, () -> StringUtil.letters(null));
+        assertThrows(NullPointerException.class, () -> StringUtil.hasLettersAndCanHaveDigits(null));
     }
 
     @Test
     void empties() {
-        assertThrows(IllegalArgumentException.class, () -> MnemonicUtil.numeric(""));
-        assertThrows(IllegalArgumentException.class, () -> MnemonicUtil.alphanumeric(""));
-        assertThrows(IllegalArgumentException.class, () -> MnemonicUtil.letters(""));
-        assertThrows(IllegalArgumentException.class, () -> MnemonicUtil.hasLettersAndCanHaveDigits(""));
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.numeric(""));
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.alphanumeric(""));
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.letters(""));
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.hasLettersAndCanHaveDigits(""));
     }
 
     @Test
     void numeric() {
-        functionUnderTest = MnemonicUtil::numeric;
+        functionUnderTest = StringUtil::numeric;
 
         positive("11111");
         positive("1223524257752726");
@@ -42,7 +42,7 @@ class MnemonicUtilTest {
 
     @Test
     void alphanumeric() {
-        functionUnderTest = MnemonicUtil::alphanumeric;
+        functionUnderTest = StringUtil::alphanumeric;
 
         positive("112312321313");
         positive("adasadasdsada");
@@ -56,7 +56,7 @@ class MnemonicUtilTest {
 
     @Test
     void letters() {
-        functionUnderTest = MnemonicUtil::letters;
+        functionUnderTest = StringUtil::letters;
 
         positive("ASDSAD");
         positive("assdwqeqwe");
@@ -69,7 +69,7 @@ class MnemonicUtilTest {
 
     @Test
     void hasLettersAndCanHaveDigits() {
-        functionUnderTest = MnemonicUtil::hasLettersAndCanHaveDigits;
+        functionUnderTest = StringUtil::hasLettersAndCanHaveDigits;
 
         positive("a112312312312312");
         positive("122312312a");
@@ -83,7 +83,7 @@ class MnemonicUtilTest {
 
     @Test
     void whitespace() {
-        assertEquals("123456789", MnemonicUtil.stripAllWhiteSpace("1 2 3  456    7\n8\t9"));
+        assertEquals("123456789", StringUtil.stripAllWhiteSpace("1 2 3  456    7\n8\t9"));
     }
 
     private void positive(String testData) {

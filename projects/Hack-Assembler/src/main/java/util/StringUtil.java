@@ -5,7 +5,7 @@ import com.google.common.base.CharMatcher;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class MnemonicUtil {
+public class StringUtil {
 
     private static final CharMatcher UPPER_CASE_LETTERS = CharMatcher.inRange('A', 'Z');
     private static final CharMatcher LOWER_CASE_LETTERS = CharMatcher.inRange('a', 'z');
@@ -53,4 +53,11 @@ public class MnemonicUtil {
         }
         return line;
     }
+
+    //    TODO TEST
+    public static String cutDownWhiteSpace(String string) {
+        String onlySimpleWhiteSpace = CharMatcher.whitespace().or(CharMatcher.is(' ').negate()).removeFrom(string);
+        return CharMatcher.is(' ').collapseFrom(onlySimpleWhiteSpace, ' ');
+    }
+
 }

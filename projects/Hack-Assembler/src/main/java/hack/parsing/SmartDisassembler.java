@@ -3,6 +3,7 @@ package hack.parsing;
 import hack.base.Instruction;
 import hack.base.SymbolTable;
 import hack.instruction.ComputationInstruction;
+import hack.instruction.InstructionFactory;
 import hack.instruction.LabelInstruction;
 import hack.instruction.SymbolAccessInstruction;
 
@@ -22,7 +23,7 @@ public class SmartDisassembler extends Disassembler {
     @Override
     public void translate(BufferedWriter writer) {
         List<Instruction> instructions = new ArrayList<>();
-        machineCodeFile.forEach(s -> instructions.add(parseInstruction(Integer.parseInt(s, 2))));
+        machineCodeFile.forEach(s -> instructions.add(InstructionFactory.parseInstruction(Integer.parseInt(s, 2))));
         reconstructBuiltIns(instructions);
         reconstructLabels(instructions);
 

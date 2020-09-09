@@ -3,18 +3,14 @@ package hack.parsing;
 import base.IterableFile;
 import hack.base.Instruction;
 import hack.base.SymbolTable;
-import hack.instruction.AddressInstruction;
-import hack.instruction.ComputationInstruction;
-import hack.instruction.LabelInstruction;
-import hack.instruction.SymbolAccessInstruction;
-import util.MnemonicUtil;
+import hack.instruction.InstructionFactory;
+import util.StringUtil;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.BiFunction;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Assembler implements Translator {
@@ -42,7 +38,7 @@ public class Assembler implements Translator {
 
     private void considerSymbols() {
         passThroughFile((line, mnemonic) -> {
-            Instruction ins = parseInstruction(mnemonic, false);
+            Instruction ins = InstructionFactory.parseInstruction(mnemonic, false, table);
             if (ins.providesSymbol()) table.addSymbol(ins.getSymbol(), line);
             return ins.hasMachineCode();
         });
@@ -51,14 +47,13 @@ public class Assembler implements Translator {
 
     private void translateToMachineCode(BufferedWriter writer) {
         passThroughFile((line, mnemonic) -> {
-            Instruction ins = parseInstruction(mnemonic, true);
+            Instruction ins = InstructionFactory.parseInstruction(mnemonic, true, table);
             if (!ins.hasMachineCode()) return false;
 
             try {
                 writer.write(ins.machineCodeString() + '\n');
             } catch (IOException e) {
-                //TODO
-                e.printStackTrace();
+                throw new RuntimeException("Could not write to output file!", e);
             }
             return true;
         });
@@ -67,8 +62,8 @@ public class Assembler implements Translator {
     private void passThroughFile(BiFunction<Integer, String, Boolean> increaseLineNumberBasedOnLineNumberAndMnemonic) {
         int lineNumber = 0;
         for (String line : assemblerFile) {
-            String relevant = MnemonicUtil.stripComments(line);
-            String mnemonic = MnemonicUtil.stripAllWhiteSpace(relevant);
+            String relevant = StringUtil.stripComments(line);
+            String mnemonic = StringUtil.stripAllWhiteSpace(relevant);
             try {
                 if (!mnemonic.isBlank() &&
                         increaseLineNumberBasedOnLineNumberAndMnemonic.apply(lineNumber, mnemonic))
@@ -82,23 +77,6 @@ public class Assembler implements Translator {
         }
     }
 
-    // TODO ausgliedern, die dependency ist hier unnötig
-    private Instruction parseInstruction(String mnemonic, boolean createVariables) {
-        Instruction result = null;
-
-        if (LabelInstruction.isValidMnemonic(mnemonic)) {
-            result = new LabelInstruction(mnemonic);
-        } else if (AddressInstruction.isValidMnemonic(mnemonic)) {
-            result = new AddressInstruction(mnemonic);
-        } else if (SymbolAccessInstruction.isValidMnemonic(mnemonic)) {
-            result = new SymbolAccessInstruction(mnemonic, table, createVariables);
-        } else if (ComputationInstruction.isValidMnemonic(mnemonic)) {
-            result = new ComputationInstruction(mnemonic);
-        }
-
-        checkArgument(result != null, "The mnemonic %s cannot be transformed into an hack.instruction", mnemonic);
-        return result;
-    }
 
     @Override
     public Path getInputFilePath() {

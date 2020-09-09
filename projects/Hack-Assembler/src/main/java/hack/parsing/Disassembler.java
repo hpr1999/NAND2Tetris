@@ -2,8 +2,7 @@ package hack.parsing;
 
 import base.IterableFile;
 import hack.base.Instruction;
-import hack.instruction.AddressInstruction;
-import hack.instruction.ComputationInstruction;
+import hack.instruction.InstructionFactory;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -27,16 +26,6 @@ public class Disassembler implements Translator {
     }
 
 
-    protected Instruction parseInstruction(int machineCode) {
-        if (AddressInstruction.isValidMachineCode(machineCode)) {
-            return new AddressInstruction(machineCode);
-        } else if (ComputationInstruction.isValidMachineCode(machineCode)) {
-            return new ComputationInstruction(machineCode);
-        } else {
-            throw new IllegalArgumentException(Integer.toBinaryString(machineCode) + " is invalid Machine Code.");
-        }
-
-    }
 
     @Override
     public void translate(BufferedWriter writer) {
@@ -44,7 +33,7 @@ public class Disassembler implements Translator {
         for (String s : machineCodeFile) {
             try {
                 int machineCode = Integer.parseInt(s, 2);
-                Instruction ins = parseInstruction(machineCode);
+                Instruction ins = InstructionFactory.parseInstruction(machineCode);
 //            TODO
                 writer.write(ins.mnemonic() + '\n');
             } catch (IOException e) {
