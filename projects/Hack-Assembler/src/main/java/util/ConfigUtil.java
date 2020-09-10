@@ -12,10 +12,13 @@ import org.json.simple.parser.ParseException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -24,19 +27,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 //TODO TEST
 public class ConfigUtil {
 
-    private static class Pair<K,V> {
-        private K first;
-        private V second;
-        private Pair(K first, V second) {
-            this.first = first;
-            this.second = second;
-        }
-        private static <EK,EV,K,V> Pair<K,V> fromEntry(Map.Entry<EK,EV> entry,Function<EK,K> keyMapper, Function<EV,V> valueMapper){
-            return new Pair<K,V>(keyMapper.apply(entry.getKey()), valueMapper.apply(entry.getValue()));
-        }
-    }
+    public static final String RESOURCES_DIR = "src/main/resources/";
 
-    public static <E> Function<Object,List<E>>listMapper(Function<Object,E> valueMapper){
+    public static <E> Function<Object, List<E>> listMapper(Function<Object, E> valueMapper) {
         return object -> ((List<E>) object)
                 .stream()
                 .map(valueMapper)
@@ -44,32 +37,50 @@ public class ConfigUtil {
     }
 
     public static <K, V> Multimap<K, V> multimapFromConfig(String configName, Function<String, K> keyMapper, Function<Object, List<V>> valueMapper) {
-        JSONObject jsonObject = parseJson(getPathForName(configName));
-        Set<Map.Entry<String, Object>> entries = jsonObject.entrySet();
-        return entries.stream()
-                .map(entry -> Pair.fromEntry(entry,keyMapper,valueMapper))
-                .collect(ArrayListMultimap::create,
-                (multimap,pair) -> multimap.putAll(pair.first, pair.second),
-                Multimap::putAll);
+        Map<K, List<V>> listMap = mapFromConfig(configName, keyMapper, valueMapper);
+        Multimap<K, V> mmap = ArrayListMultimap.create();
+        listMap.forEach(mmap::putAll);
+        return mmap;
     }
 
     public static <K, V> Map<K, V> mapFromConfig(String configName, Function<String, K> keyMapper, Function<Object, V> valueMapper) {
-        JSONObject jsonObject = parseJson(getPathForName(configName));
-        Set<Map.Entry<String, Object>> entries = jsonObject.entrySet();
-        return entries.stream().collect(Collectors.toMap(
-                entry -> keyMapper.apply(entry.getKey()),
-                entry -> valueMapper.apply(entry.getValue())));
+        return fromConfig(configName, keyMapper, valueMapper,
+                HashMap::new,
+                (map, pair) -> map.put(pair.first, pair.second),
+                HashMap::putAll);
     }
 
     public static BiMap<String, Integer> biMapFromConfig(String configName) {
+        return replaceNull(biMapFromConfig(configName, s -> s, o -> Math.toIntExact((Long) o)));
+    }
+
+    public static <K, V> BiMap<K, V> biMapFromConfig(String configName,
+                                                     Function<String, K> keyMapper, Function<Object, V> valueMapper) {
+        return fromConfig(configName, keyMapper, valueMapper,
+                HashBiMap::create,
+                (biMap, pair) -> biMap.put(pair.first, pair.second),
+                HashBiMap::putAll);
+    }
+
+    public static <M extends Map<K, V>, K, V> M fromConfig(String configName,
+                                                           Function<String, K> keyMapper, Function<Object, V> valueMapper,
+                                                           Supplier<M> supplier, BiConsumer<M, Pair<K, V>> accumulator, BiConsumer<M, M> combiner) {
+        checkNotNull(configName);
+        checkNotNull(keyMapper);
+        checkNotNull(valueMapper);
+        checkNotNull(supplier);
+        checkNotNull(accumulator);
+        checkNotNull(combiner);
+
         JSONObject jsonObject = parseJson(getPathForName(configName));
-        BiMap<String, Integer> biMap = HashBiMap.create();
-        jsonObject.forEach((string, longV) -> biMap.put(String.valueOf(string), Math.toIntExact((Long) longV)));
-        return replaceNull(biMap);
+        Set<Map.Entry<String, Object>> entries = jsonObject.entrySet();
+        return entries.stream()
+                .map(entry -> Pair.fromEntry(entry, keyMapper, valueMapper))
+                .collect(supplier, accumulator, combiner);
     }
 
     private static Path getPathForName(String name) {
-        return Paths.get("src/main/resources/" + name + ".json");
+        return Paths.get(RESOURCES_DIR + name + ".json");
     }
 
     private static JSONObject parseJson(Path config) {
@@ -88,6 +99,20 @@ public class ConfigUtil {
         }
 
         return jsonObject;
+    }
+
+    private static class Pair<K, V> {
+        private final K first;
+        private final V second;
+
+        private Pair(K first, V second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        private static <EK, EV, K, V> Pair<K, V> fromEntry(Map.Entry<EK, EV> entry, Function<EK, K> keyMapper, Function<EV, V> valueMapper) {
+            return new Pair<K, V>(keyMapper.apply(entry.getKey()), valueMapper.apply(entry.getValue()));
+        }
     }
 
     private static <K, V> BiMap<K, V> replaceNull(BiMap<K, V> map) {
