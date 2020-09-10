@@ -1,7 +1,7 @@
 package hack.instruction;
 
 import hack.base.Instruction;
-import util.MnemonicUtil;
+import util.StringUtil;
 
 public class LabelInstruction extends Instruction {
 
@@ -38,7 +38,7 @@ public class LabelInstruction extends Instruction {
         char lastChar = stringRepresentation.charAt(lastIndex);
         String label = stringRepresentation.substring(1, lastIndex);
 
-        return first == '(' && lastChar == ')' && MnemonicUtil.validIdentifier(label);
+        return first == '(' && lastChar == ')' && StringUtil.validIdentifier(label);
     }
 
     @Override

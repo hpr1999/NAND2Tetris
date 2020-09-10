@@ -49,7 +49,6 @@ public class IterableFile implements Iterable<String> {
     public void forEach(Consumer<? super String> action) {
         Iterator<String> iterator = iterator();
         iterator.forEachRemaining(action);
-
     }
 
     private static class FileIterator implements Iterator<String> {

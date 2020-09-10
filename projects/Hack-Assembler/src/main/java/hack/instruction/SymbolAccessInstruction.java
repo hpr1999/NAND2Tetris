@@ -1,7 +1,7 @@
 package hack.instruction;
 
 import hack.base.SymbolTable;
-import util.MnemonicUtil;
+import util.StringUtil;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,7 +40,7 @@ public class SymbolAccessInstruction extends AddressInstruction {
     }
 
     public static boolean isValidMnemonic(String stringRepresentation) {
-        return '@' == stringRepresentation.charAt(0) && MnemonicUtil.validIdentifier(stringRepresentation.substring(1));
+        return '@' == stringRepresentation.charAt(0) && StringUtil.validIdentifier(stringRepresentation.substring(1));
     }
 
     public static int translate(String mnemonic, SymbolTable table, boolean createVariable) {

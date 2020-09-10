@@ -26,7 +26,6 @@ public class Disassembler implements Translator {
     }
 
 
-
     @Override
     public void translate(BufferedWriter writer) {
         int line = 0;
@@ -34,10 +33,9 @@ public class Disassembler implements Translator {
             try {
                 int machineCode = Integer.parseInt(s, 2);
                 Instruction ins = InstructionFactory.parseInstruction(machineCode);
-//            TODO
                 writer.write(ins.mnemonic() + '\n');
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Could not write to output file!", e);
             } catch (Throwable t) {
                 System.err.println("Current lineNumber: " + line);
                 System.err.println("Current lineText: " + s);

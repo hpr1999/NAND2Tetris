@@ -81,10 +81,10 @@ class IntegrationTest {
         Files.deleteIfExists(smartDisassemblyFile);
         Files.deleteIfExists(smartHackFile);
 
-        assemble(asmFile, hackFile);
-        disassemble(hackFile, disassemblyFile);
-        smartDisassemble(hackFile, smartDisassemblyFile);
-        assemble(smartDisassemblyFile, smartHackFile);
+        translate("assemble", asmFile, hackFile);
+        translate("disassemble", hackFile, disassemblyFile);
+        translate("smart-disassemble", hackFile, smartDisassemblyFile);
+        translate("assemble", smartDisassemblyFile, smartHackFile);
 
         assertEquals(Files.lines(cmpFile).collect(Collectors.toList()), Files.lines(hackFile).collect(Collectors.toList()));
         assertEquals(Files.lines(cmpFile).collect(Collectors.toList()), Files.lines(smartHackFile).collect(Collectors.toList()));
@@ -94,15 +94,4 @@ class IntegrationTest {
         main(new String[]{operation, input.toAbsolutePath().toString(), output.toAbsolutePath().toString()});
     }
 
-    private void assemble(Path input, Path output) throws IOException {
-        translate("assemble", input, output);
-    }
-
-    private void disassemble(Path input, Path output) throws IOException {
-        translate("disassemble", input, output);
-    }
-
-    private void smartDisassemble(Path input, Path output) throws IOException {
-        translate("smart-disassemble", input, output);
-    }
 }

@@ -14,7 +14,6 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-//TODO TEST
 public class SmartDisassembler extends Disassembler {
     public SmartDisassembler(Path hackFilePath, Path assemblerFilePath) {
         super(hackFilePath, assemblerFilePath);
@@ -33,7 +32,7 @@ public class SmartDisassembler extends Disassembler {
             try {
                 writer.write(s1);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Could not write to output file!", e);
             }
         }
 
