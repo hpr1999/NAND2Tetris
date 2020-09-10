@@ -5,20 +5,22 @@ import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.*;
 
-// TODO TEST
 public class GenericArgumentProcessor {
 
     private final Map<Argument, Object> valuesPerArgument = new HashMap<>();
     private final Queue<Argument<?>> arguments = new LinkedList<>();
     private final Queue<String> incomingArguments;
+    private final Set<Argument> argumentSet = new HashSet<>();
 
     public GenericArgumentProcessor(String[] argumentValues) {
         this.incomingArguments = new LinkedList<>(Arrays.asList(argumentValues));
     }
 
     public void registerArgument(Argument<?> argument) {
+        checkNotNull(argument);
         checkArgument(!arguments.contains(argument), "This argument was already added.");
         arguments.add(argument);
+        argumentSet.add(argument);
     }
 
     public void process() {
@@ -30,6 +32,8 @@ public class GenericArgumentProcessor {
     }
 
     public <T> T get(Argument<T> argument) {
+        checkNotNull(argument, "Argument was null.");
+        checkArgument(argumentSet.contains(argument), "The argument %s has not been registered.", argument);
         if (valuesPerArgument.containsKey(argument))
             return (T) valuesPerArgument.get(argument);
         else {
@@ -48,4 +52,5 @@ public class GenericArgumentProcessor {
             this.defaultSupplier = defaultSupplier;
         }
     }
+
 }
