@@ -1,70 +1,20 @@
 package hack.instruction;
 
-import hack.base.Instruction;
 import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import hack.base.Instruction;
 import util.BinaryUtil;
+import util.ConfigUtil;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 public class ComputationInstruction extends Instruction {
 
-    private static final BiMap<String, Integer> computations = HashBiMap.create();
-    private static final BiMap<String, Integer> destinations = HashBiMap.create();
-    private static final BiMap<String, Integer> jumps = HashBiMap.create();
+    private static final BiMap<String, Integer> computations = ConfigUtil.biMapFromConfig("computation-comp");
+    private static final BiMap<String, Integer> destinations = ConfigUtil.biMapFromConfig("computation-dest");
+    private static final BiMap<String, Integer> jumps = ConfigUtil.biMapFromConfig("computation-jump");
     public static final int DESTINATION_BINARY_OFFSET = 3;
     public static final int COMPUTATION_BINARY_OFFSET = 6;
     public static final int MARKER_BINARY_OFFSET = 13;
-
-    //    FIXME config file?
-    static {
-        jumps.put(null, 0b000);
-        jumps.put("JGT", 0b001);
-        jumps.put("JEQ", 0b010);
-        jumps.put("JGE", 0b011);
-        jumps.put("JLT", 0b100);
-        jumps.put("JNE", 0b101);
-        jumps.put("JLE", 0b110);
-        jumps.put("JMP", 0b111);
-
-        destinations.put(null, 0b000);
-        destinations.put("M", 0b001);
-        destinations.put("D", 0b010);
-        destinations.put("MD", 0b011);
-        destinations.put("A", 0b100);
-        destinations.put("AM", 0b101);
-        destinations.put("AD", 0b110);
-        destinations.put("AMD", 0b111);
-
-        computations.put("0", 0b0101010);
-        computations.put("1", 0b0111111);
-        computations.put("-1", 0b0111010);
-        computations.put("D", 0b0001100);
-        computations.put("A", 0b0110000);
-        computations.put("!D", 0b0001101);
-        computations.put("!A", 0b0110001);
-        computations.put("-D", 0b0001111);
-        computations.put("-A", 0b0110011);
-        computations.put("D+1", 0b0011111);
-        computations.put("A+1", 0b0110111);
-        computations.put("D-1", 0b0001110);
-        computations.put("A-1", 0b0110010);
-        computations.put("D+A", 0b0000010);
-        computations.put("D-A", 0b0010011);
-        computations.put("A-D", 0b0000111);
-        computations.put("D&A", 0b0000000);
-        computations.put("D|A", 0b0010101);
-        computations.put("M", 0b1110000);
-        computations.put("!M", 0b1110001);
-        computations.put("-M", 0b1110011);
-        computations.put("M+1", 0b1110111);
-        computations.put("M-1", 0b1110010);
-        computations.put("D+M", 0b1000010);
-        computations.put("D-M", 0b1010011);
-        computations.put("M-D", 0b1000111);
-        computations.put("D&M", 0b1000000);
-        computations.put("D|M", 0b1010101);
-    }
 
     public ComputationInstruction(int integerRepresentation) {
         this(integerRepresentation, translate(integerRepresentation));

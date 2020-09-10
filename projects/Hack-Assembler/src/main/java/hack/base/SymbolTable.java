@@ -1,8 +1,8 @@
 package hack.base;
 
 import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import hack.instruction.Symbol;
+import util.ConfigUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,20 +47,7 @@ public class SymbolTable {
                 addSymbol(entry.getValue(), entry.getKey()));
     }
 
-    public static Multimap<Integer, Symbol> builtInsPerLine = MultimapBuilder.treeKeys().arrayListValues().build();
-
-    //    TODO read from config
-    static {
-        for (int i = 0; i <= 15; i++) {
-            builtInsPerLine.put(i, new Symbol("R" + i));
-        }
-        builtInsPerLine.put(16384, new Symbol("SCREEN"));
-        builtInsPerLine.put(24576, new Symbol("KBD"));
-        builtInsPerLine.put(0, new Symbol("SP"));
-        builtInsPerLine.put(1, new Symbol("LCL"));
-        builtInsPerLine.put(2, new Symbol("ARG"));
-        builtInsPerLine.put(3, new Symbol("THIS"));
-        builtInsPerLine.put(4, new Symbol("THAT"));
-    }
-
+    public static Multimap<Integer, Symbol> builtInsPerLine =
+            ConfigUtil.multimapFromConfig("symbol-builtins",
+            Integer::parseInt, ConfigUtil.listMapper(o -> new Symbol(o.toString())));
 }
