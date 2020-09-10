@@ -1,4 +1,13 @@
 package vm.command;
 
-public class ReturnCommand {
+import hack.base.Instruction;
+import vm.context.TranslationContext;
+
+import java.util.List;
+
+public class ReturnCommand implements VMCommand {
+    @Override
+    public List<Instruction> toAssembler(TranslationContext context) {
+        return null;
+    }
 }

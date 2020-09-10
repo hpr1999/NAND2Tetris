@@ -1,4 +1,13 @@
 package vm.command;
 
-public class ConditionalGotoCommand {
+import hack.base.Instruction;
+import vm.context.TranslationContext;
+
+import java.util.List;
+
+public class ConditionalGotoCommand implements VMCommand {
+    @Override
+    public List<Instruction> toAssembler(TranslationContext context) {
+        return null;
+    }
 }

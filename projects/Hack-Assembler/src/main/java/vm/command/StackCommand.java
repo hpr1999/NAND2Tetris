@@ -1,4 +1,18 @@
 package vm.command;
 
-public class StackCommand {
+import hack.base.Instruction;
+import vm.context.TranslationContext;
+
+import java.util.List;
+
+public class StackCommand implements VMCommand {
+
+    public StackCommand(String command) {
+
+    }
+
+    @Override
+    public List<Instruction> toAssembler(TranslationContext context) {
+        return null;
+    }
 }
