@@ -54,10 +54,8 @@ public class StringUtil {
         return line;
     }
 
-    //    TODO TEST
     public static String cutDownWhiteSpace(String string) {
-        String onlySimpleWhiteSpace = CharMatcher.whitespace().or(CharMatcher.is(' ').negate()).removeFrom(string);
-        return CharMatcher.is(' ').collapseFrom(onlySimpleWhiteSpace, ' ');
+        return CharMatcher.is(' ').collapseFrom(CharMatcher.whitespace().replaceFrom(string,' '), ' ');
     }
 
 }

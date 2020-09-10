@@ -16,6 +16,10 @@ class StringUtilTest {
         assertThrows(NullPointerException.class, () -> StringUtil.alphanumeric(null));
         assertThrows(NullPointerException.class, () -> StringUtil.letters(null));
         assertThrows(NullPointerException.class, () -> StringUtil.hasLettersAndCanHaveDigits(null));
+        assertThrows(NullPointerException.class, () -> StringUtil.cutDownWhiteSpace(null));
+        assertThrows(NullPointerException.class, () -> StringUtil.stripAllWhiteSpace(null));
+        assertThrows(NullPointerException.class, () -> StringUtil.stripComments(null));
+        assertThrows(NullPointerException.class, () -> StringUtil.validIdentifier(null));
     }
 
     @Test
@@ -24,6 +28,11 @@ class StringUtilTest {
         assertThrows(IllegalArgumentException.class, () -> StringUtil.alphanumeric(""));
         assertThrows(IllegalArgumentException.class, () -> StringUtil.letters(""));
         assertThrows(IllegalArgumentException.class, () -> StringUtil.hasLettersAndCanHaveDigits(""));
+        assertThrows(IllegalArgumentException.class, () -> StringUtil.validIdentifier(""));
+
+        assertEquals("", StringUtil.cutDownWhiteSpace(""));
+        assertEquals("", StringUtil.stripAllWhiteSpace(""));
+        assertEquals("", StringUtil.stripComments(""));
     }
 
     @Test
@@ -82,9 +91,18 @@ class StringUtilTest {
     }
 
     @Test
-    void whitespace() {
+    void stripWhitespace() {
         assertEquals("123456789", StringUtil.stripAllWhiteSpace("1 2 3  456    7\n8\t9"));
     }
+
+    @Test
+    void stripComments() {
+        assertEquals("1 2 3  456    7\n8\t9", StringUtil.stripComments("1 2 3  456    7\n8\t9//sdfsdfsdf"));
+    }
+
+    @Test
+    void cutDownWhiteSpace() {
+        assertEquals("1 2 3 456 7 8 9 ", StringUtil.cutDownWhiteSpace("1 2 3  456    7\n\n8\t9\n"));    }
 
     private void positive(String testData) {
         assertTrue(functionUnderTest.apply(testData));
