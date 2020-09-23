@@ -1,0 +1,6 @@
+{
+  "local": "@LCL",
+  "argument": "@ARG",
+  "this": "@THIS",
+  "that": "@THAT"
+}

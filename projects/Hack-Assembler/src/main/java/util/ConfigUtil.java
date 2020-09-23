@@ -27,6 +27,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 //TODO TEST
 public class ConfigUtil {
 
+    public static <T,R> Function<Object,R> castMapper(Function<T,R> mapper) {
+        return o -> mapper.apply((T) o);
+    }
+    public static <T,R> Function<Object,R> castMapper(Class<T>tClass,Function<T,R> mapper) {
+        return o -> mapper.apply((T) o);
+    }
+
+    public static <T> Function<T,T> identityMapper(Class<T> tClass){return o -> o;}
     public static final String RESOURCES_DIR = "src/main/resources/";
 
     public static <E> Function<Object, List<E>> listMapper(Function<Object, E> valueMapper) {

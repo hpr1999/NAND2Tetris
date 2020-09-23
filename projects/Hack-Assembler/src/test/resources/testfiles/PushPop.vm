@@ -1,0 +1,10 @@
+// Test all remaining push and pop Commands
+push constant 42
+push argument 0
+pop local 1
+push this 2
+pop that 3
+push that 4
+pop this 5
+push local 6
+pop argument 7

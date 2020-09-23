@@ -1,0 +1,39 @@
+{
+  "add": ["M=D+M"],
+  "sub": ["M=M-D"],
+  "neg": ["M=-M"],
+  "eq": [
+    "D=M-D",
+    "@VM.SETUP.SETONE",
+    "D;JEQ",
+    "@SP",
+    "M=0",
+    "@{LINENUMBER}",
+    "D=A",
+    "@R15",
+    "M=D"
+  ],
+  "gt": ["D=M-D",
+    "@VM.SETUP.SETONE",
+    "D;JGT",
+    "@SP",
+    "M=0",
+    "@{LINENUMBER}",
+    "D=A",
+    "@R15",
+    "M=D"
+  ],
+  "lt": ["D=M-D",
+    "@VM.SETUP.SETONE",
+    "D;JLT",
+    "@SP",
+    "M=0",
+    "@{LINENUMBER}",
+    "D=A",
+    "@R15",
+    "M=D"
+  ],
+  "and": ["M=D&M"],
+  "or": ["M=D|M"],
+  "not": ["M=!M"]
+}

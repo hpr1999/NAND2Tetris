@@ -1,0 +1,14 @@
+{
+  "instructions":
+  [
+    "@VM.SETUP.END",
+    "0;JMP",
+    "(VM.SETUP.SETONE)",
+    "@SP",
+    "M=1",
+    "@R15",
+    "A=M",
+    "0;JMP",
+    "(VM.SETUP.END)"
+  ]
+}
